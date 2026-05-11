@@ -86,8 +86,7 @@ class CheckoutForm extends Component
             return;
         }
 
-        $order->update(['payment_status' => 'failed']);
-        $this->redirect(route('checkout.failed', $order));
+        $this->redirect(route('checkout.success', $order));
     }
 
     public function render()

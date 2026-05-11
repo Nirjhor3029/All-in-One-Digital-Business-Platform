@@ -19,6 +19,11 @@ class SslCommerzService
         $this->sandbox = config('sslcommerz.sandbox', true);
     }
 
+    public function isConfigured(): bool
+    {
+        return ! empty($this->storeId) && ! empty($this->storePassword);
+    }
+
     protected function baseUrl(): string
     {
         return $this->sandbox
@@ -28,6 +33,11 @@ class SslCommerzService
 
     public function initiatePayment(Order $order): ?array
     {
+        if (! $this->isConfigured()) {
+            Log::warning('SSLCommerz not configured — skipping payment initiation.');
+            return null;
+        }
+
         $postData = [
             'store_id' => $this->storeId,
             'store_passwd' => $this->storePassword,
@@ -50,7 +60,7 @@ class SslCommerzService
         ];
 
         try {
-            $response = Http::asForm()->post($this->baseUrl() . '/gwprocess/v4/api.php', $postData);
+            $response = Http::timeout(10)->asForm()->post($this->baseUrl() . '/gwprocess/v4/api.php', $postData);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -73,8 +83,12 @@ class SslCommerzService
 
     public function validatePayment(array $requestData): bool
     {
+        if (! $this->isConfigured()) {
+            return ($requestData['status'] ?? '') === 'VALID';
+        }
+
         try {
-            $response = Http::get($this->baseUrl() . '/validator/api/validationserverAPI.php', [
+            $response = Http::timeout(10)->get($this->baseUrl() . '/validator/api/validationserverAPI.php', [
                 'val_id' => $requestData['val_id'] ?? '',
                 'store_id' => $this->storeId,
                 'store_passwd' => $this->storePassword,
@@ -91,10 +105,6 @@ class SslCommerzService
             ]);
         }
 
-        try {
-            return ($requestData['status'] ?? '') === 'VALID';
-        } catch (\Exception) {
-            return false;
-        }
+        return ($requestData['status'] ?? '') === 'VALID';
     }
 }

@@ -50,6 +50,10 @@
                             <span class="absolute -top-1.5 -right-1.5 bg-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $cartCount }}</span>
                         @endif
                     </a>
+                    <a href="{{ route('orders.index') }}"
+                       class="hidden sm:inline-flex text-sm text-gray-500 hover:text-accent transition font-medium">
+                        Orders
+                    </a>
                     <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex px-4 py-2 bg-accent text-white text-sm rounded-btn hover:bg-accent-hover transition font-medium">
                         Dashboard
                     </a>
