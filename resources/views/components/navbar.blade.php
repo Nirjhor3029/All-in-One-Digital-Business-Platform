@@ -58,6 +58,10 @@
                        class="hidden sm:inline-flex text-sm transition font-medium {{ request()->routeIs('services.my-services') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         My Services
                     </a>
+                    <a href="{{ route('subscriptions.my-subscriptions') }}"
+                       class="hidden sm:inline-flex text-sm transition font-medium {{ request()->routeIs('subscriptions.my-subscriptions') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        Subscriptions
+                    </a>
                     <a href="{{ route('orders.index') }}"
                        class="hidden sm:inline-flex text-sm text-gray-500 hover:text-accent transition font-medium">
                         Orders

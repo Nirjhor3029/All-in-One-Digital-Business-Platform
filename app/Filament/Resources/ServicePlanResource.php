@@ -68,6 +68,26 @@ class ServicePlanResource extends Resource
                             ->label('Mark as Popular')
                             ->helperText('Recommended/popular plan badge on the frontend.')
                             ->inline(false),
+                        Forms\Components\Toggle::make('is_subscription')
+                            ->label('Subscription Plan')
+                            ->helperText('Enable for recurring billing (monthly/yearly).')
+                            ->live()
+                            ->inline(false)
+                            ->afterStateUpdated(fn (Forms\Set $set, bool $state) => $state ? null : $set('billing_interval', null)),
+                        Forms\Components\Select::make('billing_interval')
+                            ->label('Billing Interval')
+                            ->options([
+                                'monthly' => 'Monthly',
+                                'yearly' => 'Yearly',
+                                'quarterly' => 'Quarterly',
+                            ])
+                            ->visible(fn (Forms\Get $get): bool => (bool) $get('is_subscription')),
+                        Forms\Components\TextInput::make('trial_days')
+                            ->label('Trial Period (days)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->placeholder('0 = no trial')
+                            ->visible(fn (Forms\Get $get): bool => (bool) $get('is_subscription')),
                     ])->columns(2),
             ]);
     }
@@ -88,6 +108,15 @@ class ServicePlanResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('delivery_time')
                     ->toggleable(),
+                Tables\Columns\IconColumn::make('is_subscription')
+                    ->label('Subscription')
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('billing_interval')
+                    ->label('Interval')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),

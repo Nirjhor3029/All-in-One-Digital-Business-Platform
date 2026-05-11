@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Enrollment;
 use App\Models\Order;
+use App\Models\ServicePlan;
 use App\Models\ServicePurchase;
+use App\Models\Subscription;
 use App\Models\Transaction;
 
 class OrderService
@@ -22,12 +24,35 @@ class OrderService
             }
 
             if ($item->itemable_type === 'App\Models\ServicePlan') {
-                ServicePurchase::create([
-                    'user_id' => $order->user_id,
-                    'service_plan_id' => $item->itemable_id,
-                    'order_id' => $order->id,
-                    'status' => 'active',
-                ]);
+                $plan = ServicePlan::find($item->itemable_id);
+
+                if ($plan && $plan->is_subscription) {
+                    $now = now();
+                    $periodEnd = $plan->billing_interval === 'yearly'
+                        ? $now->copy()->addYear()
+                        : $now->copy()->addMonth();
+
+                    Subscription::create([
+                        'user_id' => $order->user_id,
+                        'service_plan_id' => $item->itemable_id,
+                        'order_id' => $order->id,
+                        'status' => $plan->trial_days ? 'trial' : 'active',
+                        'trial_ends_at' => $plan->trial_days
+                            ? $now->copy()->addDays($plan->trial_days)
+                            : null,
+                        'current_period_start' => $now,
+                        'current_period_end' => $plan->trial_days
+                            ? $now->copy()->addDays($plan->trial_days)
+                            : $periodEnd,
+                    ]);
+                } else {
+                    ServicePurchase::create([
+                        'user_id' => $order->user_id,
+                        'service_plan_id' => $item->itemable_id,
+                        'order_id' => $order->id,
+                        'status' => 'active',
+                    ]);
+                }
             }
         }
 

@@ -60,6 +60,10 @@ Route::middleware('auth')->group(function () {
     // My Services
     Route::get('/my-services', [App\Http\Controllers\MyServicesController::class, 'index'])->name('services.my-services');
 
+    // My Subscriptions
+    Route::get('/my-subscriptions', [App\Http\Controllers\MySubscriptionController::class, 'index'])->name('subscriptions.my-subscriptions');
+    Route::post('/subscriptions/{subscription}/cancel', [App\Http\Controllers\MySubscriptionController::class, 'cancel'])->name('subscriptions.cancel');
+
     // My Orders
     Route::get('/orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
