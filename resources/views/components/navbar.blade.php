@@ -6,10 +6,22 @@
                     {{ config('app.name') }}
                 </a>
                 <div class="hidden lg:flex items-center gap-6">
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : '#' }}" class="text-sm text-primary/70 hover:text-accent transition font-medium">Courses</a>
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}" class="text-sm text-primary/70 hover:text-accent transition font-medium">Services</a>
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}" class="text-sm text-primary/70 hover:text-accent transition font-medium">Blog</a>
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}" class="text-sm text-primary/70 hover:text-accent transition font-medium">Shop</a>
+                    <a href="{{ route('courses.index') }}"
+                       class="text-sm transition font-medium {{ request()->routeIs('courses*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        Courses
+                    </a>
+                    <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}"
+                       class="text-sm transition font-medium {{ request()->routeIs('services*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        Services
+                    </a>
+                    <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}"
+                       class="text-sm transition font-medium {{ request()->routeIs('blog*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        Blog
+                    </a>
+                    <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}"
+                       class="text-sm transition font-medium {{ request()->routeIs('shop*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        Shop
+                    </a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -34,10 +46,16 @@
     </div>
     <div :class="{'block': mobileOpen, 'hidden': !mobileOpen}" class="lg:hidden border-t border-gray-100 bg-white">
         <div class="px-4 py-3 space-y-2">
-            <a href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : '#' }}" class="block py-2 text-sm text-primary/70 hover:text-accent">Courses</a>
-            <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}" class="block py-2 text-sm text-primary/70 hover:text-accent">Services</a>
-            <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}" class="block py-2 text-sm text-primary/70 hover:text-accent">Blog</a>
-            <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}" class="block py-2 text-sm text-primary/70 hover:text-accent">Shop</a>
+            <a href="{{ route('courses.index') }}"
+               class="block py-2 text-sm transition {{ request()->routeIs('courses*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                Courses
+            </a>
+            <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}"
+               class="block py-2 text-sm text-primary/70 hover:text-accent">Services</a>
+            <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}"
+               class="block py-2 text-sm text-primary/70 hover:text-accent">Blog</a>
+            <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}"
+               class="block py-2 text-sm text-primary/70 hover:text-accent">Shop</a>
         </div>
     </div>
 </nav>
