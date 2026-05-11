@@ -68,17 +68,8 @@ class OrderResource extends Resource
 
                 Forms\Components\Section::make('Order Items')
                     ->schema([
-                        Forms\Components\Placeholder::make('items_list')
-                            ->label('Items')
-                            ->content(function (?Order $record): string {
-                                if (! $record || $record->items->isEmpty()) return 'No items';
-                                return $record->items->map(function ($item) {
-                                    $title = $item->itemable?->title ?? 'Unknown';
-                                    $type = class_basename($item->itemable_type);
-                                    $price = number_format($item->price, 2);
-                                    return "- {$title} ({$type}) — \${$price}";
-                                })->implode("\n");
-                            })
+                        Forms\Components\View::make('filament.order-items-table')
+                            ->viewData(fn (?Order $record): array => ['order' => $record])
                             ->columnSpanFull(),
                     ]),
 
@@ -171,13 +162,13 @@ class OrderResource extends Resource
                     ->action(function (Order $record, OrderService $service) {
                         $service->markPaid($record);
                         Notification::make()
-                            ->title('Payment confirmed — enrollments created.')
+                            ->title('Payment confirmed — access granted.')
                             ->success()
                             ->send();
                     })
                     ->requiresConfirmation()
                     ->modalHeading('Confirm Payment')
-                    ->modalDescription('This will mark the order as paid and enroll the user in their courses.'),
+                    ->modalDescription('This will mark the order as paid and grant the user access to their purchased items.'),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([]);

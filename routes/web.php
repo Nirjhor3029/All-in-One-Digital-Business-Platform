@@ -23,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('courses.progress');
 });
 
+Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{service:slug}', [App\Http\Controllers\ServiceController::class, 'show'])->name('services.show');
+
 Route::get('/about', fn () => view('pages.about'))->name('about');
 Route::get('/contact', fn () => view('pages.contact'))->name('contact');
 Route::get('/faq', fn () => view('pages.faq'))->name('faq');
@@ -53,6 +56,9 @@ Route::middleware('auth')->group(function () {
 
     // My Courses
     Route::get('/my-courses', [App\Http\Controllers\CourseController::class, 'myCourses'])->name('courses.my-courses');
+
+    // My Services
+    Route::get('/my-services', [App\Http\Controllers\MyServicesController::class, 'index'])->name('services.my-services');
 
     // My Orders
     Route::get('/orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');

@@ -10,7 +10,7 @@
                        class="text-sm transition font-medium {{ request()->routeIs('courses*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         Courses
                     </a>
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}"
+                    <a href="{{ route('services.index') }}"
                        class="text-sm transition font-medium {{ request()->routeIs('services*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         Services
                     </a>
@@ -54,6 +54,10 @@
                        class="hidden sm:inline-flex text-sm transition font-medium {{ request()->routeIs('courses.my-courses') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         My Courses
                     </a>
+                    <a href="{{ route('services.my-services') }}"
+                       class="hidden sm:inline-flex text-sm transition font-medium {{ request()->routeIs('services.my-services') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
+                        My Services
+                    </a>
                     <a href="{{ route('orders.index') }}"
                        class="hidden sm:inline-flex text-sm text-gray-500 hover:text-accent transition font-medium">
                         Orders
@@ -82,8 +86,8 @@
                class="block py-2 text-sm transition {{ request()->routeIs('courses*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                 Courses
             </a>
-            <a href="{{ \Illuminate\Support\Facades\Route::has('services.index') ? route('services.index') : '#' }}"
-               class="block py-2 text-sm text-primary/70 hover:text-accent">Services</a>
+            <a href="{{ route('services.index') }}"
+               class="block py-2 text-sm transition {{ request()->routeIs('services*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">Services</a>
             <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}"
                class="block py-2 text-sm text-primary/70 hover:text-accent">Blog</a>
             <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}"

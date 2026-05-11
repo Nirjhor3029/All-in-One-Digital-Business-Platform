@@ -45,8 +45,13 @@
                     <div class="space-y-3 text-sm">
                         @if($cart)
                             @foreach($cart->items as $item)
+                                @php
+                                    $checkoutTitle = $item->itemable_type === 'App\Models\ServicePlan'
+                                        ? ($item->itemable?->service?->title ?? '') . ' — ' . ($item->itemable?->name ?? '')
+                                        : ($item->itemable->title ?? 'Item');
+                                @endphp
                                 <div class="flex justify-between">
-                                    <span class="truncate">{{ $item->itemable->title ?? 'Item' }}</span>
+                                    <span class="truncate">{{ \Illuminate\Support\Str::limit($checkoutTitle, 40) }}</span>
                                     <span class="font-medium shrink-0">${{ number_format($item->price, 2) }}</span>
                                 </div>
                             @endforeach

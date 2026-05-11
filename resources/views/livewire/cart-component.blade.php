@@ -18,11 +18,28 @@
                 </div>
 
                 @foreach($cart->items as $item)
+                    @php
+                        $isServicePlan = $item->itemable_type === 'App\Models\ServicePlan';
+                        if ($isServicePlan) {
+                            $plan = $item->itemable;
+                            $service = $plan?->service;
+                            $img = $service?->thumbnail_url;
+                            $title = $service?->title . ' — ' . $plan?->name;
+                            $provider = $service?->provider?->name;
+                            $typeLabel = 'Service';
+                            $itemLink = $service ? route('services.show', $service->slug) : '#';
+                        } else {
+                            $img = $item->itemable?->thumbnail_url;
+                            $title = $item->itemable->title ?? 'Item';
+                            $provider = method_exists($item->itemable, 'instructor') ? $item->itemable?->instructor?->name : null;
+                            $typeLabel = class_basename($item->itemable_type);
+                            $itemLink = $item->itemable?->slug ? route('courses.show', $item->itemable->slug) : '#';
+                        }
+                    @endphp
                     <div class="bg-white rounded-card shadow-card p-5 flex items-start gap-5 hover:shadow-card-hover transition-shadow">
                         <div class="w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                            @php $img = $item->itemable?->thumbnail_url ?? null; @endphp
                             @if($img)
-                                <img src="{{ $img }}" alt="{{ $item->itemable->title ?? '' }}"
+                                <img src="{{ $img }}" alt="{{ $title }}"
                                      class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-muted text-xs">
@@ -32,10 +49,12 @@
                         </div>
 
                         <div class="flex-1 min-w-0">
-                            <h3 class="font-semibold text-base truncate">{{ $item->itemable->title ?? 'Item' }}</h3>
-                            <p class="text-xs text-muted mt-0.5 capitalize">{{ class_basename($item->itemable_type) }}</p>
-                            @if(method_exists($item->itemable, 'instructor') && $item->itemable->instructor)
-                                <p class="text-xs text-muted mt-1">By {{ $item->itemable->instructor->name }}</p>
+                            <a href="{{ $itemLink }}">
+                                <h3 class="font-semibold text-base truncate hover:text-accent transition">{{ $title }}</h3>
+                            </a>
+                            <p class="text-xs text-muted mt-0.5">{{ $typeLabel }}</p>
+                            @if($provider)
+                                <p class="text-xs text-muted mt-1">By {{ $provider }}</p>
                             @endif
                         </div>
 
@@ -59,8 +78,13 @@
 
                     <div class="space-y-3 text-sm">
                         @foreach($cart->items as $item)
+                            @php
+                                $summaryTitle = $item->itemable_type === 'App\Models\ServicePlan'
+                                    ? ($item->itemable?->service?->title ?? '') . ' — ' . ($item->itemable?->name ?? '')
+                                    : ($item->itemable->title ?? 'Item');
+                            @endphp
                             <div class="flex justify-between text-sm">
-                                <span class="text-muted truncate mr-2">{{ \Illuminate\Support\Str::limit($item->itemable->title ?? 'Item', 30) }}</span>
+                                <span class="text-muted truncate mr-2">{{ \Illuminate\Support\Str::limit($summaryTitle, 30) }}</span>
                                 <span class="font-medium shrink-0">${{ number_format($item->price, 2) }}</span>
                             </div>
                         @endforeach

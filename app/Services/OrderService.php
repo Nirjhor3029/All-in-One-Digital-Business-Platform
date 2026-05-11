@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Enrollment;
 use App\Models\Order;
+use App\Models\ServicePurchase;
 use App\Models\Transaction;
 
 class OrderService
@@ -18,6 +19,15 @@ class OrderService
                     'user_id' => $order->user_id,
                     'course_id' => $item->itemable_id,
                 ], ['status' => 'active']);
+            }
+
+            if ($item->itemable_type === 'App\Models\ServicePlan') {
+                ServicePurchase::create([
+                    'user_id' => $order->user_id,
+                    'service_plan_id' => $item->itemable_id,
+                    'order_id' => $order->id,
+                    'status' => 'active',
+                ]);
             }
         }
 

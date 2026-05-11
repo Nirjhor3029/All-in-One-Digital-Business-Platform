@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Course;
+use App\Models\ServicePlan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,10 +26,15 @@ class CartController extends Controller
     {
         $model = match ($type) {
             'course' => Course::findOrFail($id),
+            'service-plan' => ServicePlan::with('service')->findOrFail($id),
             default => abort(404),
         };
 
-        if (! $model->is_published ?? true) {
+        if ($type === 'course' && (! $model->is_published ?? true)) {
+            abort(404);
+        }
+
+        if ($type === 'service-plan' && (! $model->is_active || ! $model->service?->is_published)) {
             abort(404);
         }
 
@@ -47,7 +53,7 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('info', 'Item already in cart.');
         }
 
-        $price = $model->discount_price ?? $model->price ?? 0;
+        $price = $model->discount_price ?? $model->price ?? $model->starting_price ?? 0;
 
         CartItem::create([
             'cart_id' => $cart->id,
