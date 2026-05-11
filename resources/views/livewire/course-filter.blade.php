@@ -10,7 +10,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-primary mb-1.5">Category</label>
-                    <div class="space-y-2">
+                    <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
                         @foreach($categories as $category)
                         <label class="flex items-center gap-2 text-sm">
                             <input type="checkbox" wire:model.live="selectedCategories" value="{{ $category->id }}"
@@ -38,17 +38,17 @@
                     <label class="block text-sm font-medium text-primary mb-1.5">Price</label>
                     <div class="space-y-2">
                         <label class="flex items-center gap-2 text-sm">
-                            <input type="radio" wire:model.live="priceRange" value="all"
+                            <input type="radio" wire:model.live="priceRange" value="all" name="priceRange"
                                    class="border-gray-300 text-accent focus:ring-accent">
                             All
                         </label>
                         <label class="flex items-center gap-2 text-sm">
-                            <input type="radio" wire:model.live="priceRange" value="free"
+                            <input type="radio" wire:model.live="priceRange" value="free" name="priceRange"
                                    class="border-gray-300 text-accent focus:ring-accent">
                             Free
                         </label>
                         <label class="flex items-center gap-2 text-sm">
-                            <input type="radio" wire:model.live="priceRange" value="paid"
+                            <input type="radio" wire:model.live="priceRange" value="paid" name="priceRange"
                                    class="border-gray-300 text-accent focus:ring-accent">
                             Paid
                         </label>

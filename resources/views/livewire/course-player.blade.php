@@ -49,7 +49,7 @@
 
             @if($currentLecture->content)
                 <div class="prose prose-gray max-w-none mt-6">
-                    {!! nl2br(e($currentLecture->content)) !!}
+                    {!! $currentLecture->content !!}
                 </div>
             @endif
 

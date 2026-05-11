@@ -21,7 +21,6 @@
     @include('components.footer')
     @include('components.toast')
     @livewireScripts
-    <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
     @stack('scripts')
 </body>
 </html>

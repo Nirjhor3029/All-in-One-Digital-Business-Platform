@@ -37,7 +37,7 @@ class CourseFilter extends Component
 
     public function render()
     {
-        $categories = Category::where('type', 'course')->where('is_active', true)->get();
+        $categories = Category::where('type', 'course')->where('is_active', true)->orderBy('sort_order')->get();
 
         $courses = Course::query()
             ->with(['instructor', 'category'])

@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="prose prose-gray max-w-none mt-8">
-                    {!! nl2br(e($course->long_description ?? $course->short_description ?? '')) !!}
+                    {!! $course->long_description ? $course->long_description : nl2br(e($course->short_description ?? '')) !!}
                 </div>
 
                 @if($course->sections->count() > 0)
