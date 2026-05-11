@@ -110,6 +110,12 @@ class CourseResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('category.typeRel.name')
+                    ->label('Category Type')
+                    ->badge()
+                    ->color('info')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('price')
                     ->money('BDT')
                     ->sortable(),

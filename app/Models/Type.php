@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Category extends Model
+class Type extends Model
 {
     use HasSlug;
 
@@ -16,9 +15,6 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'type',
-        'type_id',
-        'parent_id',
         'is_active',
         'sort_order',
     ];
@@ -30,18 +26,8 @@ class Category extends Model
             ->saveSlugsTo('slug');
     }
 
-    public function parent(): BelongsTo
+    public function categories(): HasMany
     {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
-
-    public function typeRel(): BelongsTo
-    {
-        return $this->belongsTo(Type::class, 'type_id');
+        return $this->hasMany(Category::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Type;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -27,6 +28,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $data) {
+            $data['type_id'] = Type::where('slug', $data['type'])->first()?->id;
             Category::create($data);
         }
     }

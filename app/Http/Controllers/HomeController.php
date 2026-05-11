@@ -10,7 +10,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('type', 'course')->where('is_active', true)->orderBy('sort_order')->get();
+        $categories = Category::whereHas('typeRel', fn($q) => $q->where('slug', 'course'))->where('is_active', true)->orderBy('sort_order')->get();
         $settings = Setting::pluck('value', 'key');
 
         return view('welcome', compact('categories', 'settings'));
