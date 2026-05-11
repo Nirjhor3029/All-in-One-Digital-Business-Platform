@@ -1,5 +1,35 @@
 <div
-    x-data="{ show: false, message: '', type: 'success' }"
+    x-data="{
+        show: false,
+        message: '',
+        type: 'success',
+        init() {
+            @session('success')
+                this.show = true;
+                this.message = '{{ session('success') }}';
+                this.type = 'success';
+                setTimeout(() => this.show = false, 4000);
+            @endsession
+            @session('error')
+                this.show = true;
+                this.message = '{{ session('error') }}';
+                this.type = 'error';
+                setTimeout(() => this.show = false, 4000);
+            @endsession
+            @session('info')
+                this.show = true;
+                this.message = '{{ session('info') }}';
+                this.type = 'info';
+                setTimeout(() => this.show = false, 4000);
+            @endsession
+            @session('warning')
+                this.show = true;
+                this.message = '{{ session('warning') }}';
+                this.type = 'warning';
+                setTimeout(() => this.show = false, 4000);
+            @endsession
+        }
+    }"
     x-on:toast.window="show = true; message = $event.detail.message; type = $event.detail.type; setTimeout(() => show = false, 4000)"
     x-show="show"
     x-transition:enter="transition ease-out duration-300"

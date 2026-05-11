@@ -103,7 +103,7 @@
                                     Content Coming Soon
                                 </div>
                             @endif
-                        @else
+                        @elseif($course->is_free)
                             <form method="POST" action="{{ route('courses.enroll', $course) }}">
                                 @csrf
                                 <button type="submit"
@@ -111,7 +111,23 @@
                                     Enroll Now
                                 </button>
                             </form>
+                        @else
+                            <form method="POST" action="{{ route('cart.add', ['course', $course->id]) }}">
+                                @csrf
+                                <button type="submit"
+                                        class="mt-6 block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">
+                                    Add to Cart — ${{ $course->current_price }}
+                                </button>
+                            </form>
                         @endif
+
+                        <form method="POST" action="{{ route('wishlist.toggle', ['course', $course->id]) }}" class="mt-3">
+                            @csrf
+                            <button type="submit"
+                                    class="w-full text-center px-4 py-2 rounded-btn transition text-sm font-medium {{ $inWishlist ? 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100' : 'border border-gray-300 hover:bg-gray-50 text-gray-700' }}">
+                                {{ $inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('register') }}"
                            class="mt-6 block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">

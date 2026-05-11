@@ -35,7 +35,9 @@ class CourseController extends Controller
             ->where('user_id', auth()->id())
             ->exists();
 
-        return view('courses.show', compact('course', 'isEnrolled'));
+        $inWishlist = auth()->check() && $course->wishlistedBy(auth()->user());
+
+        return view('courses.show', compact('course', 'isEnrolled', 'inWishlist'));
     }
 
     public function enroll(Course $course)
@@ -58,7 +60,6 @@ class CourseController extends Controller
                 ->with('success', 'Enrolled successfully! Content coming soon.');
         }
 
-        return redirect()->route('courses.show', $course)
-            ->with('error', 'This course requires payment. Payment system coming soon.');
+        return redirect()->route('cart.add', ['course', $course->id]);
     }
 }

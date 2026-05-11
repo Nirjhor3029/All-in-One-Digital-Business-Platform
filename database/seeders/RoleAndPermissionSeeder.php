@@ -27,6 +27,10 @@ class RoleAndPermissionSeeder extends Seeder
             // Roles & Permissions
             'role.list', 'role.create', 'role.edit', 'role.delete',
             'permission.list', 'permission.create', 'permission.edit', 'permission.delete',
+            // Orders
+            'order.list', 'order.create', 'order.edit', 'order.delete',
+            // Coupons
+            'coupon.list', 'coupon.create', 'coupon.edit', 'coupon.delete',
             // Settings
             'setting.list', 'setting.edit',
         ];

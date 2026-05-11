@@ -101,6 +101,17 @@ class Course extends Model
         return $this->created_at && $this->created_at->gt(now()->subDays(7));
     }
 
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Wishlist::class, 'wishlistable');
+    }
+
+    public function wishlistedBy(?User $user): bool
+    {
+        if (! $user) return false;
+        return $this->wishlists()->where('user_id', $user->id)->exists();
+    }
+
     public function getDurationFormattedAttribute(): string
     {
         $hours = intdiv($this->duration, 60);
