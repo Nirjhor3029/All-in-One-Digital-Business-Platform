@@ -92,12 +92,19 @@
 
                     @auth
                         @if($isEnrolled)
-                            <a href="{{ route('learn.player', [$course, $course->sections->first()?->lectures->first()]) }}"
-                               class="mt-6 block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">
-                                Start Learning
-                            </a>
+                            @php $firstLecture = $course->sections->first()?->lectures->first(); @endphp
+                            @if($firstLecture)
+                                <a href="{{ route('learn.player', [$course, $firstLecture]) }}"
+                                   class="mt-6 block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">
+                                    Start Learning
+                                </a>
+                            @else
+                                <div class="mt-6 block w-full text-center px-4 py-3 bg-gray-200 text-gray-500 rounded-btn font-semibold">
+                                    Content Coming Soon
+                                </div>
+                            @endif
                         @else
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('courses.enroll', $course) }}">
                                 @csrf
                                 <button type="submit"
                                         class="mt-6 block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">

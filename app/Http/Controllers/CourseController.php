@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Enrollment;
 
 class CourseController extends Controller
 {
@@ -35,5 +36,29 @@ class CourseController extends Controller
             ->exists();
 
         return view('courses.show', compact('course', 'isEnrolled'));
+    }
+
+    public function enroll(Course $course)
+    {
+        abort_unless($course->is_published, 404);
+
+        if ($course->is_free) {
+            Enrollment::firstOrCreate([
+                'user_id' => auth()->id(),
+                'course_id' => $course->id,
+            ], ['status' => 'active']);
+
+            $firstLecture = $course->sections->first()?->lectures->first();
+
+            if ($firstLecture) {
+                return redirect()->route('learn.player', [$course, $firstLecture]);
+            }
+
+            return redirect()->route('courses.show', $course)
+                ->with('success', 'Enrolled successfully! Content coming soon.');
+        }
+
+        return redirect()->route('courses.show', $course)
+            ->with('error', 'This course requires payment. Payment system coming soon.');
     }
 }

@@ -18,6 +18,8 @@ class SectionResource extends Resource
 
     protected static ?string $navigationGroup = 'LMS';
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Form $form): Form
     {
         return $form
