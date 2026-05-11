@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use App\Filament\Traits\HasPermissionBasedAccess;
+use App\Services\OrderService;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -64,6 +66,22 @@ class OrderResource extends Resource
                             ->columnSpanFull(),
                     ])->columns(3),
 
+                Forms\Components\Section::make('Order Items')
+                    ->schema([
+                        Forms\Components\Placeholder::make('items_list')
+                            ->label('Items')
+                            ->content(function (?Order $record): string {
+                                if (! $record || $record->items->isEmpty()) return 'No items';
+                                return $record->items->map(function ($item) {
+                                    $title = $item->itemable?->title ?? 'Unknown';
+                                    $type = class_basename($item->itemable_type);
+                                    $price = number_format($item->price, 2);
+                                    return "- {$title} ({$type}) — \${$price}";
+                                })->implode("\n");
+                            })
+                            ->columnSpanFull(),
+                    ]),
+
                 Forms\Components\Section::make('Billing Details')
                     ->schema([
                         Forms\Components\TextInput::make('billing_name')
@@ -88,10 +106,21 @@ class OrderResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->badge()
-                    ->color('gray'),
+                    ->color('gray')
+                    ->url(fn (Order $record): string => OrderResource::getUrl('edit', ['record' => $record])),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('items_list')
+                    ->label('Items')
+                    ->getStateUsing(function (Order $record): string {
+                        return $record->items->map(fn ($item) => $item->itemable?->title ?? class_basename($item->itemable_type))->implode(', ');
+                    })
+                    ->limit(40)
+                    ->tooltip(function (Order $record): ?string {
+                        $items = $record->items->map(fn ($item) => $item->itemable?->title ?? 'Item')->implode("\n");
+                        return $items ?: null;
+                    }),
                 Tables\Columns\TextColumn::make('total')
                     ->money('USD')
                     ->sortable(),
@@ -134,6 +163,21 @@ class OrderResource extends Resource
                     ]),
             ])
             ->actions([
+                Tables\Actions\Action::make('markPaid')
+                    ->label('Confirm Payment')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (Order $record): bool => $record->payment_status !== 'paid')
+                    ->action(function (Order $record, OrderService $service) {
+                        $service->markPaid($record);
+                        Notification::make()
+                            ->title('Payment confirmed — enrollments created.')
+                            ->success()
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Confirm Payment')
+                    ->modalDescription('This will mark the order as paid and enroll the user in their courses.'),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([]);
@@ -141,9 +185,7 @@ class OrderResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

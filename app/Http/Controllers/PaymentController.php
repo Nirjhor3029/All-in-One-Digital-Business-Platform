@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Enrollment;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Services\SslCommerzService;
@@ -24,12 +23,6 @@ class PaymentController extends Controller
         $validation = $sslCommerz->validatePayment($request->all());
 
         if ($validation) {
-            $order->update([
-                'payment_status' => 'paid',
-                'status' => 'processing',
-                'payment_method' => 'sslcommerz',
-            ]);
-
             Transaction::create([
                 'order_id' => $order->id,
                 'transaction_id' => $request->bank_tran_id ?? $tranId,
@@ -39,14 +32,10 @@ class PaymentController extends Controller
                 'gateway_response' => $request->all(),
             ]);
 
-            foreach ($order->items as $item) {
-                if ($item->itemable_type === 'App\Models\Course') {
-                    Enrollment::firstOrCreate([
-                        'user_id' => $order->user_id,
-                        'course_id' => $item->itemable_id,
-                    ], ['status' => 'active']);
-                }
-            }
+            $order->update([
+                'payment_status' => 'paid',
+                'payment_method' => 'sslcommerz',
+            ]);
         } else {
             $order->update(['payment_status' => 'failed']);
 
@@ -117,12 +106,6 @@ class PaymentController extends Controller
         $validated = $sslCommerz->validatePayment($request->all());
 
         if ($validated && $request->status === 'VALID') {
-            $order->update([
-                'payment_status' => 'paid',
-                'status' => 'processing',
-                'payment_method' => 'sslcommerz',
-            ]);
-
             Transaction::updateOrCreate(
                 ['transaction_id' => $request->bank_tran_id ?? $request->tran_id],
                 [
@@ -134,14 +117,10 @@ class PaymentController extends Controller
                 ]
             );
 
-            foreach ($order->items as $item) {
-                if ($item->itemable_type === 'App\Models\Course') {
-                    Enrollment::firstOrCreate([
-                        'user_id' => $order->user_id,
-                        'course_id' => $item->itemable_id,
-                    ], ['status' => 'active']);
-                }
-            }
+            $order->update([
+                'payment_status' => 'paid',
+                'payment_method' => 'sslcommerz',
+            ]);
         }
 
         return redirect()->route('home');

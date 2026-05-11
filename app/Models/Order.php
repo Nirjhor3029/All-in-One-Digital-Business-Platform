@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\OrderService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +23,17 @@ class Order extends Model
             'discount' => 'decimal:2',
             'total' => 'decimal:2',
         ];
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::updated(function (self $order) {
+            if ($order->wasChanged('payment_status') && $order->payment_status === 'paid') {
+                app(OrderService::class)->createEnrollments($order);
+            }
+        });
     }
 
     public function user(): BelongsTo
