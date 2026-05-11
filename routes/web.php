@@ -26,6 +26,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{service:slug}', [App\Http\Controllers\ServiceController::class, 'show'])->name('services.show');
 
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/category/{category:slug}', [App\Http\Controllers\BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/tag/{tag:slug}', [App\Http\Controllers\BlogController::class, 'tag'])->name('blog.tag');
+Route::get('/blog/{post:slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
 Route::get('/about', fn () => view('pages.about'))->name('about');
 Route::get('/contact', fn () => view('pages.contact'))->name('contact');
 Route::get('/faq', fn () => view('pages.faq'))->name('faq');

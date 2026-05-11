@@ -14,7 +14,7 @@
                        class="text-sm transition font-medium {{ request()->routeIs('services*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         Services
                     </a>
-                    <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}"
+                    <a href="{{ route('blog.index') }}"
                        class="text-sm transition font-medium {{ request()->routeIs('blog*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">
                         Blog
                     </a>
@@ -92,8 +92,8 @@
             </a>
             <a href="{{ route('services.index') }}"
                class="block py-2 text-sm transition {{ request()->routeIs('services*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">Services</a>
-            <a href="{{ \Illuminate\Support\Facades\Route::has('blog.index') ? route('blog.index') : '#' }}"
-               class="block py-2 text-sm text-primary/70 hover:text-accent">Blog</a>
+            <a href="{{ route('blog.index') }}"
+               class="block py-2 text-sm transition {{ request()->routeIs('blog*') ? 'text-accent font-semibold' : 'text-primary/70 hover:text-accent' }}">Blog</a>
             <a href="{{ \Illuminate\Support\Facades\Route::has('shop.index') ? route('shop.index') : '#' }}"
                class="block py-2 text-sm text-primary/70 hover:text-accent">Shop</a>
         </div>

@@ -41,6 +41,10 @@ class RoleAndPermissionSeeder extends Seeder
             'service_purchase.list', 'service_purchase.create', 'service_purchase.edit', 'service_purchase.delete',
             // Subscriptions
             'subscription.list', 'subscription.create', 'subscription.edit', 'subscription.delete',
+            // Blog
+            'post.list', 'post.create', 'post.edit', 'post.delete',
+            'tag.list', 'tag.create', 'tag.edit', 'tag.delete',
+            'comment.list', 'comment.create', 'comment.edit', 'comment.delete',
         ];
 
         foreach ($permissions as $name) {
