@@ -2,7 +2,27 @@
     {{-- Main Content --}}
     <div class="flex-1 min-w-0">
         <div class="bg-black aspect-video flex items-center justify-center">
-            @if($currentLecture->video_url)
+            @if($currentLecture->video_url && (str_contains($currentLecture->video_url, 'youtube') || str_contains($currentLecture->video_url, 'youtu.be')))
+                @php
+                    preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $currentLecture->video_url, $matches);
+                    $youtubeId = $matches[1] ?? null;
+                @endphp
+                @if($youtubeId)
+                    <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/{{ $youtubeId }}"
+                            frameborder="0" allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                    </iframe>
+                @endif
+            @elseif($currentLecture->video_url && str_contains($currentLecture->video_url, 'vimeo'))
+                @php
+                    preg_match('/(?:vimeo\.com\/)(\d+)/', $currentLecture->video_url, $matches);
+                    $vimeoId = $matches[1] ?? null;
+                @endphp
+                @if($vimeoId)
+                    <iframe class="w-full h-full" src="https://player.vimeo.com/video/{{ $vimeoId }}"
+                            frameborder="0" allowfullscreen></iframe>
+                @endif
+            @elseif($currentLecture->video_url)
                 <video controls class="w-full h-full" src="{{ $currentLecture->video_url }}"></video>
             @else
                 <div class="text-white/50 text-center">
