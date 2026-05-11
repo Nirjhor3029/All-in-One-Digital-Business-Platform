@@ -51,6 +51,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/wishlist', [App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle/{type}/{id}', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
+    // My Courses
+    Route::get('/my-courses', [App\Http\Controllers\CourseController::class, 'myCourses'])->name('courses.my-courses');
+
     // My Orders
     Route::get('/orders', [App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
