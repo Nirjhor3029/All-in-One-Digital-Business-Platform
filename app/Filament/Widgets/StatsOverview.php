@@ -21,7 +21,7 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-o-check-circle')
                 ->color('success'),
 
-            Stat::make('Admins', User::where('role', 'admin')->count())
+            Stat::make('Admins', User::role('Super Admin')->count())
                 ->description('Administrator accounts')
                 ->descriptionIcon('heroicon-o-shield-check')
                 ->color('warning'),

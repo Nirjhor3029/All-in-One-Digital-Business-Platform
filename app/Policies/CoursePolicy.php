@@ -24,17 +24,17 @@ class CoursePolicy
 
     public function update(User $user, Course $course): bool
     {
-        return $user->id === $course->user_id || $user->role === 'admin';
+        return $user->id === $course->user_id || $user->hasRole('Super Admin');
     }
 
     public function delete(User $user, Course $course): bool
     {
-        return $user->id === $course->user_id || $user->role === 'admin';
+        return $user->id === $course->user_id || $user->hasRole('Super Admin');
     }
 
     public function viewLectures(User $user, Course $course): bool
     {
-        if ($course->is_free || $user->id === $course->user_id || $user->role === 'admin') {
+        if ($course->is_free || $user->id === $course->user_id || $user->hasRole('Super Admin')) {
             return true;
         }
 
