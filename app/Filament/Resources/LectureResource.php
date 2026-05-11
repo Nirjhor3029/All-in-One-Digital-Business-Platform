@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LectureResource\Pages;
 use App\Models\Lecture;
+use App\Filament\Traits\HasPermissionBasedAccess;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class LectureResource extends Resource
 {
+    use HasPermissionBasedAccess;
     protected static ?string $model = Lecture::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-play';

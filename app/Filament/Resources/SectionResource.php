@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SectionResource\Pages;
 use App\Models\Section;
+use App\Filament\Traits\HasPermissionBasedAccess;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,7 @@ use Filament\Tables\Table;
 
 class SectionResource extends Resource
 {
+    use HasPermissionBasedAccess;
     protected static ?string $model = Section::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
