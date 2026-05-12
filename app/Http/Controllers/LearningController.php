@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certificate;
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\Lecture;
 use App\Models\LectureProgress;
+use App\Jobs\GenerateCertificate;
+use App\Notifications\PlatformNotification;
 use Illuminate\Http\Request;
 
 class LearningController extends Controller
@@ -36,6 +40,33 @@ class LearningController extends Controller
                 'completed_at' => now(),
             ]
         );
+
+        $course = $lecture->section->course;
+        $allLectures = $course->sections()->with('lectures')->get()->pluck('lectures')->flatten();
+        $total = $allLectures->count();
+
+        if ($total > 0) {
+            $completedIds = LectureProgress::where('user_id', auth()->id())
+                ->whereIn('lecture_id', $allLectures->pluck('id'))
+                ->where('completed', true)
+                ->pluck('lecture_id');
+
+            if ($completedIds->count() >= $total) {
+                $enrollment = Enrollment::where('user_id', auth()->id())
+                    ->where('course_id', $course->id)
+                    ->first();
+
+                if ($enrollment && !Certificate::where('enrollment_id', $enrollment->id)->exists()) {
+                    GenerateCertificate::dispatch($enrollment);
+                    auth()->user()->notify(new PlatformNotification(
+                        title: 'Course Completed!',
+                        body: "Congratulations! You've completed {$course->title}. Your certificate is being generated.",
+                        url: route('courses.my-courses'),
+                        icon: 'academic-cap',
+                    ));
+                }
+            }
+        }
 
         if ($request->ajax()) {
             return response()->json(['status' => 'ok', 'progress' => $progress]);

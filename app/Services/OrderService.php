@@ -8,6 +8,7 @@ use App\Models\ServicePlan;
 use App\Models\ServicePurchase;
 use App\Models\Subscription;
 use App\Models\Transaction;
+use App\Notifications\PlatformNotification;
 
 class OrderService
 {
@@ -72,5 +73,14 @@ class OrderService
             'amount' => $order->total,
             'status' => 'success',
         ]);
+
+        try {
+            $order->user->notify(new PlatformNotification(
+                title: 'Payment Confirmed',
+                body: "Your payment for order #{$order->order_number} has been confirmed. You now have access to your purchases.",
+                url: route('orders.show', $order),
+                icon: 'check-circle',
+            ));
+        } catch (\Exception $e) {}
     }
 }

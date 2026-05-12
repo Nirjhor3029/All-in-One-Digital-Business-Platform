@@ -90,7 +90,12 @@
                     </div>
                 </div>
 
-                @if($order->payment_status === 'unpaid')
+                @if($order->payment_status === 'paid')
+                    <a href="{{ route('orders.invoice', $order) }}"
+                       class="block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">
+                        Download Invoice
+                    </a>
+                @elseif($order->payment_status === 'unpaid')
                     <a href="{{ route('checkout.index') }}"
                        class="block w-full text-center px-4 py-3 bg-accent text-white rounded-btn hover:bg-accent-hover transition font-semibold">
                         Retry Payment

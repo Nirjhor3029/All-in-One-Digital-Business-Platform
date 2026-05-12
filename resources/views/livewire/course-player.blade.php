@@ -53,6 +53,31 @@
                 </div>
             @endif
 
+            @if($courseCompleted)
+                <div class="mt-6 p-4 bg-success/5 border border-success/20 rounded-card">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-8 h-8 text-success shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <p class="font-semibold text-success">Course Completed!</p>
+                            <p class="text-sm text-muted">Congratulations on finishing this course.</p>
+                            @if($certificate)
+                                <a href="{{ route('certificates.download', $certificate) }}"
+                                   class="inline-flex items-center gap-1 text-sm font-medium text-accent hover:text-accent-hover mt-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Download Certificate
+                                </a>
+                            @else
+                                <p class="text-xs text-muted mt-1">Generating certificate...</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
                 @if($prevLecture)
                     <a href="{{ route('learn.player', [$course, $prevLecture]) }}"

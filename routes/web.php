@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Certificate;
+use App\Services\CertificateService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -37,9 +41,27 @@ Route::get('/faq', fn () => view('pages.faq'))->name('faq');
 Route::get('/privacy-policy', fn () => view('pages.privacy'))->name('privacy');
 Route::get('/terms', fn () => view('pages.terms'))->name('terms');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Certificate download
+    Route::get('/certificates/{certificate}/download', function (Certificate $certificate, CertificateService $service) {
+        abort_if($certificate->user_id !== auth()->id(), 403);
+        return $service->download($certificate);
+    })->name('certificates.download');
+
+    // Dashboard notifications
+    Route::get('/dashboard/notifications', [DashboardController::class, 'notifications'])->name('dashboard.notifications');
+    Route::post('/dashboard/notifications/{id}/mark-read', [DashboardController::class, 'markNotification'])->name('dashboard.notifications.mark-read');
+    Route::post('/dashboard/notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('dashboard.notifications.mark-all-read');
+
+    // Invoice download
+    Route::get('/orders/{order}/invoice', function (\App\Models\Order $order) {
+        abort_if($order->user_id !== auth()->id(), 403);
+        $service = app(\App\Services\InvoiceService::class);
+        return $service->download($order);
+    })->name('orders.invoice');
+});
 
 Route::middleware('auth')->group(function () {
     // Cart

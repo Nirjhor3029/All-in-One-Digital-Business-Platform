@@ -48,7 +48,12 @@ class CourseController extends Controller
             return [$course->id => $progress];
         });
 
-        return view('courses.my-courses', compact('courses', 'progressData'));
+        $certificates = \App\Models\Certificate::where('user_id', auth()->id())
+            ->whereIn('course_id', $courses->pluck('id'))
+            ->get()
+            ->keyBy('course_id');
+
+        return view('courses.my-courses', compact('courses', 'progressData', 'certificates'));
     }
 
     public function show(Course $course)

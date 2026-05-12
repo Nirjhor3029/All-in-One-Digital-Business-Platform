@@ -30,6 +30,7 @@
                         $cartCount = \App\Models\Cart::where('user_id', auth()->id())->withCount('items')->first()?->items_count ?? 0;
                         $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
                     @endphp
+                    @livewire('notification-bell')
                     <a href="{{ route('wishlist.index') }}"
                        class="hidden sm:inline-flex p-2 text-gray-500 hover:text-accent transition relative"
                        title="Wishlist">

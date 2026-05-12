@@ -53,8 +53,19 @@
 
                             @php
                                 $firstLecture = $course->sections->first()?->lectures->first();
+                                $hasCertificate = isset($certificates[$course->id]);
                             @endphp
-                            @if($firstLecture)
+                            @if($hasCertificate)
+                                <a href="{{ route('certificates.download', $certificates[$course->id]) }}"
+                                   class="mt-4 block w-full text-center px-4 py-2 bg-success text-white text-sm rounded-btn hover:bg-green-600 transition font-medium">
+                                    <span class="flex items-center justify-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        Certificate
+                                    </span>
+                                </a>
+                            @elseif($firstLecture)
                                 <a href="{{ route('learn.player', [$course, $firstLecture]) }}"
                                    class="mt-4 block w-full text-center px-4 py-2 bg-accent text-white text-sm rounded-btn hover:bg-accent-hover transition font-medium">
                                     {{ $progress > 0 ? 'Continue' : 'Start Learning' }}
