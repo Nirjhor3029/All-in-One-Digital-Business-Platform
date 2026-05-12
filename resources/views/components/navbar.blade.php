@@ -4,9 +4,9 @@
      :class="scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100' : 'bg-transparent'">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 lg:h-20 items-center">
-            {{-- LEFT: Logo + Nav Links --}}
+            {{-- LEFT: Logo + Nav Links (always visible) --}}
             <div class="flex items-center gap-10">
-                <a href="{{ url('/') }}" class="flex items-center gap-2.5">
+                <a href="{{ url('/') }}" class="flex items-center gap-2.5 shrink-0">
                     <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-indigo-700 flex items-center justify-center">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
@@ -16,14 +16,12 @@
                         {{ config('app.name') }}
                     </span>
                 </a>
-                @guest
                 <div class="hidden lg:flex items-center gap-8">
                     @foreach([
-                        ['label' => 'কোর্স', 'route' => 'courses.index'],
-                        ['label' => 'Services', 'route' => 'services.index'],
-                        ['label' => 'Projects', 'route' => '#'],
-                        ['label' => 'Blog', 'route' => 'blog.index'],
-                        ['label' => 'About', 'route' => 'about'],
+                        ['label' => 'Courses', 'route' => 'courses.index', 'key' => 'courses*'],
+                        ['label' => 'Services', 'route' => 'services.index', 'key' => 'services*'],
+                        ['label' => 'Blog', 'route' => 'blog.index', 'key' => 'blog*'],
+                        ['label' => 'Shop', 'route' => '#', 'key' => 'shop*'],
                     ] as $link)
                     <a href="{{ $link['route'] }}"
                        class="text-sm transition font-medium"
@@ -32,10 +30,9 @@
                     </a>
                     @endforeach
                 </div>
-                @endguest
             </div>
 
-            {{-- RIGHT: Guest Actions or Auth Toolbar --}}
+            {{-- RIGHT: Auth Toolbar or Guest Actions --}}
             @php
                 $cartCount = auth()->check() ? \App\Models\Cart::where('user_id', auth()->id())->withCount('items')->first()?->items_count ?? 0 : 0;
                 $wishlistCount = auth()->check() ? \App\Models\Wishlist::where('user_id', auth()->id())->count() : 0;
@@ -63,22 +60,7 @@
                             <span class="absolute -top-1.5 -right-1.5 bg-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $cartCount }}</span>
                         @endif
                     </a>
-                    <a href="{{ route('courses.my-courses') }}"
-                       class="hidden lg:inline-flex text-sm transition font-medium text-primary/70 hover:text-accent">
-                        My Courses
-                    </a>
-                    <a href="{{ route('services.my-services') }}"
-                       class="hidden lg:inline-flex text-sm transition font-medium text-primary/70 hover:text-accent">
-                        My Services
-                    </a>
-                    <a href="{{ route('subscriptions.my-subscriptions') }}"
-                       class="hidden lg:inline-flex text-sm transition font-medium text-primary/70 hover:text-accent">
-                        Subscriptions
-                    </a>
-                    <a href="{{ route('orders.index') }}"
-                       class="hidden lg:inline-flex text-sm text-gray-500 hover:text-accent transition font-medium">
-                        Orders
-                    </a>
+
                     <a href="{{ route('dashboard') }}"
                        class="text-sm font-semibold px-4 py-2 bg-accent text-white rounded-btn hover:bg-accent-hover transition">
                         Dashboard
@@ -113,30 +95,25 @@
     </div>
     <div :class="{'block': mobileOpen, 'hidden': !mobileOpen}" class="lg:hidden border-t bg-white shadow-lg">
         <div class="px-4 py-3 space-y-1">
-            @guest
-                <a href="{{ route('courses.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">কোর্স</a>
-                <a href="{{ route('services.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Services</a>
-                <a href="#" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Projects</a>
-                <a href="{{ route('blog.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Blog</a>
-                <a href="{{ route('about') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">About</a>
-                <hr class="my-2">
-                <a href="{{ route('login') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Sign In</a>
-                <a href="{{ route('register') }}" class="block py-2.5 text-sm text-accent font-semibold">শুরু করুন</a>
-            @else
+            <a href="{{ route('courses.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Courses</a>
+            <a href="{{ route('services.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Services</a>
+            <a href="{{ route('blog.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Blog</a>
+            <a href="#" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Shop</a>
+            <hr class="my-2">
+            @auth
                 <a href="{{ route('dashboard') }}" class="block py-2.5 text-sm text-accent font-semibold">Dashboard</a>
-                <a href="{{ route('courses.my-courses') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">My Courses</a>
-                <a href="{{ route('services.my-services') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">My Services</a>
-                <a href="{{ route('subscriptions.my-subscriptions') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Subscriptions</a>
-                <a href="{{ route('orders.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Orders</a>
-                <a href="{{ route('wishlist.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Wishlist</a>
-                <a href="{{ route('cart.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Cart @if($cartCount > 0) ({{ $cartCount }}) @endif</a>
+                <a href="{{ route('wishlist.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Wishlist @if($wishlistCount > 0)({{ $wishlistCount }})@endif</a>
+                <a href="{{ route('cart.index') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Cart @if($cartCount > 0)({{ $cartCount }})@endif</a>
                 <a href="{{ route('profile.edit') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Settings</a>
                 <hr class="my-2">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left py-2.5 text-sm text-red-500 hover:text-red-600 font-medium">Logout</button>
                 </form>
-            @endguest
+            @else
+                <a href="{{ route('login') }}" class="block py-2.5 text-sm text-primary/70 hover:text-accent font-medium">Sign In</a>
+                <a href="{{ route('register') }}" class="block py-2.5 text-sm text-accent font-semibold">শুরু করুন</a>
+            @endauth
         </div>
     </div>
 </nav>
