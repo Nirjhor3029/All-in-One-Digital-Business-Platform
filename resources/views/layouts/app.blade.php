@@ -15,7 +15,7 @@
 </head>
 <body class="bg-surface text-primary font-sans antialiased">
     @include('components.navbar')
-    <main>
+    <main class="{{ request()->routeIs('home') ? '' : 'pt-20' }}">
         {{ $slot }}
     </main>
     @include('components.footer')
