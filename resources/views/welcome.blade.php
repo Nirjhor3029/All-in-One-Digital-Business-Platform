@@ -39,20 +39,20 @@
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div>
                     <span class="inline-flex items-center gap-2 bg-accent/20 text-accent-light border border-accent/30 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-                        🇧🇩 Bangladesh's All-in-One Platform
+                        {{ $settings['hero_badge'] ?? "Bangladesh's All-in-One Platform" }}
                     </span>
-                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] text-white mb-6">
-                        শিখুন।<br>
-                        <span class="text-accent">বানান।</span><br>
-                        বাড়ান।
+                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] text-white mb-6" style="line-height: 1.4">
+                        <span class="mb-2">{{ $settings['hero_headline_line1'] ?? 'শিখুন।' }}</span><br>
+                        <span class="text-accent">{{ $settings['hero_headline_line2'] ?? 'বানান।' }}</span><br>
+                        <span>{{ $settings['hero_headline_line3'] ?? 'বাড়ান।' }}</span>
                     </h1>
                     <p class="text-white/60 text-lg leading-relaxed max-w-lg mb-8">
-                        Bangladesh's first platform where you get premium courses, ready-made SaaS products, and expert support — all in one place.
+                        {{ $settings['hero_subtitle'] ?? "Bangladesh's first platform where you get premium courses, ready-made SaaS products, and expert support — all in one place." }}
                     </p>
                     <div class="flex flex-wrap gap-4 mb-10">
-                        <a href="{{ route('courses.index') }}"
+                        <a href="{{ $settings['hero_cta_url'] ?? route('courses.index') }}"
                            class="inline-flex items-center gap-2 px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-btn font-semibold transition shadow-lg shadow-accent/30">
-                            কোর্স দেখুন
+                            {{ $settings['hero_cta_text'] ?? 'কোর্স দেখুন' }}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
@@ -63,7 +63,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Demo দেখুন
+                            {{ $settings['hero_demo_text'] ?? 'Demo দেখুন' }}
                         </a>
                     </div>
                     <div class="flex items-center gap-4">
@@ -73,10 +73,10 @@
                             @endforeach
                         </div>
                         <div>
-                            <p class="text-white font-semibold text-sm">2,450+ জন শিখছেন</p>
+                            <p class="text-white font-semibold text-sm">{{ $settings['hero_social_proof'] ?? '2,450+ জন শিখছেন' }}</p>
                             <div class="flex items-center gap-1 text-amber-400 text-xs">
                                 <span class="text-white/70">★★★★★</span>
-                                <span class="text-white/80 ml-1">4.9/5</span>
+                                <span class="text-white/80 ml-1">{{ $settings['hero_rating_text'] ?? '4.9/5' }}</span>
                             </div>
                         </div>
                     </div>
@@ -135,17 +135,12 @@
     <section class="bg-gray-50 py-10 lg:py-14 border-y border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                @foreach([
-                    ['icon' => '📚', 'value' => '50+', 'label' => 'Courses', 'sub' => 'Expert-led'],
-                    ['icon' => '👥', 'value' => '2,450+', 'label' => 'Students', 'sub' => 'Active learners'],
-                    ['icon' => '🛠', 'value' => '20+', 'label' => 'Products', 'sub' => 'SaaS solutions'],
-                    ['icon' => '⭐', 'value' => '4.9/5', 'label' => 'Rating', 'sub' => 'Student reviews'],
-                ] as $stat)
+                @foreach($stats as $stat)
                 <div class="text-center group">
                     <div class="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300 inline-block">{{ $stat['icon'] }}</div>
                     <div class="text-3xl lg:text-4xl font-bold text-primary">{{ $stat['value'] }}</div>
                     <div class="text-sm text-muted mt-1">{{ $stat['label'] }}</div>
-                    <div class="text-xs text-gray-400">{{ $stat['sub'] }}</div>
+                    <div class="text-xs text-gray-400">{{ $stat['sub'] ?? '' }}</div>
                 </div>
                 @endforeach
             </div>
@@ -506,7 +501,7 @@
                     </div>
                     <h2 class="font-display text-3xl lg:text-4xl font-bold text-primary mb-4">আজই শুরু করুন</h2>
                     <p class="text-muted text-lg max-w-lg mx-auto mb-8">
-                        Join 2,450+ learners and business owners already growing with us. 
+                        Join {{ $settings['hero_social_proof'] ?? '2,450+ learners' }} and business owners already growing with us. 
                         <span class="text-accent font-semibold">Special discount available for first month!</span>
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">

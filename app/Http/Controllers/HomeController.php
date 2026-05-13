@@ -49,11 +49,19 @@ class HomeController extends Controller
             ->take(2)
             ->get();
 
+        $stats = json_decode($settings['stats'] ?? '[]', true) ?: [
+            ['icon' => '📚', 'value' => '50+', 'label' => 'Courses', 'sub' => 'Expert-led'],
+            ['icon' => '👥', 'value' => '2,450+', 'label' => 'Students', 'sub' => 'Active learners'],
+            ['icon' => '🛠', 'value' => '20+', 'label' => 'Products', 'sub' => 'SaaS solutions'],
+            ['icon' => '⭐', 'value' => '4.9/5', 'label' => 'Rating', 'sub' => 'Student reviews'],
+        ];
+
         return view('welcome', compact(
             'categories', 'settings',
             'featuredCourses', 'courses',
             'services',
-            'featuredPost', 'recentPosts'
+            'featuredPost', 'recentPosts',
+            'stats'
         ));
     }
 }
