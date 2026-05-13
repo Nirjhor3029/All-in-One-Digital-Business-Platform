@@ -1,10 +1,10 @@
-<x-app-layout>
-    <x-slot:title>My Courses - {{ config('app.name') }}</x-slot:title>
+@extends('layouts.dashboard')
 
-    <section class="py-12 max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="font-display text-3xl font-bold">My Courses</h1>
-        </div>
+@section('title', 'My Courses - ' . config('app.name'))
+
+@section('content')
+<section class="max-w-6xl">
+    <h1 class="font-display text-3xl font-bold mb-8">My Courses</h1>
 
         @if($courses->isEmpty())
             <div class="text-center py-16">
@@ -80,5 +80,5 @@
                 @endforeach
             </div>
         @endif
-    </section>
-</x-app-layout>
+</section>
+@endsection

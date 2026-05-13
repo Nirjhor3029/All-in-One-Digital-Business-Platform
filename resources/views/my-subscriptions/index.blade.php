@@ -1,5 +1,8 @@
-<x-app-layout>
-    <x-slot:title>My Subscriptions - {{ config('app.name') }}</x-slot:title>
+@extends('layouts.dashboard')
+
+@section('title', 'My Subscriptions - ' . config('app.name'))
+
+@section('content')
 
     <section class="py-12 max-w-6xl mx-auto px-4">
         <div class="flex items-center justify-between mb-8">
@@ -91,4 +94,4 @@
             </div>
         @endif
     </section>
-</x-app-layout>
+@endsection

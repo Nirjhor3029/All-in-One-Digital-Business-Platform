@@ -1,8 +1,10 @@
-<x-app-layout>
-    <x-slot:title>Order #{{ $order->order_number }}</x-slot:title>
+@extends('layouts.dashboard')
 
-    <section class="py-12 max-w-4xl mx-auto px-4">
-        <div class="flex items-center gap-4 mb-8">
+@section('title', 'Order #' . $order->order_number)
+
+@section('content')
+<section class="max-w-4xl">
+    <div class="flex items-center gap-4 mb-8">
             <a href="{{ route('orders.index') }}" class="text-accent hover:text-accent-hover transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
@@ -104,4 +106,4 @@
             </div>
         </div>
     </section>
-</x-app-layout>
+@endsection
