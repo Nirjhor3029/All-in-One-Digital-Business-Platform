@@ -3,9 +3,9 @@
 @section('title', 'Dashboard - ' . config('app.name'))
 
 @section('content')
-<div class="flex items-center justify-between mb-8">
+{{-- <div class="flex items-center justify-between mb-8">
     <h1 class="font-display text-3xl font-bold">Dashboard</h1>
-</div>
+</div> --}}
 
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <div class="bg-white rounded-card shadow-card p-5">

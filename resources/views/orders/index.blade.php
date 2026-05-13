@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="max-w-4xl">
-    <h1 class="font-display text-3xl font-bold mb-8">My Orders</h1>
+    {{-- <h1 class="font-display text-3xl font-bold mb-8">My Orders</h1> --}}
 
     @if($orders->isEmpty())
         <div class="text-center py-16">

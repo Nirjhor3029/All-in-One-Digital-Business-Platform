@@ -5,9 +5,9 @@
 @section('content')
 
     <section class="py-12 max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-8">
+        {{-- <div class="flex items-center justify-between mb-8">
             <h1 class="font-display text-3xl font-bold">My Services</h1>
-        </div>
+        </div> --}}
 
         @if($purchases->isEmpty())
             <div class="text-center py-16">
