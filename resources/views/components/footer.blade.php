@@ -48,10 +48,10 @@
             <div>
                 <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-5">Support</h4>
                 <ul class="space-y-3">
-                    <li><a href="{{ route('faq') }}" class="text-sm text-gray-400 hover:text-white transition">FAQ</a></li>
+                    {{-- <li><a href="{{ route('faq') }}" class="text-sm text-gray-400 hover:text-white transition">FAQ</a></li>
                     <li><a href="{{ route('contact') }}" class="text-sm text-gray-400 hover:text-white transition">Contact</a></li>
                     <li><a href="{{ route('privacy') }}" class="text-sm text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                    <li><a href="{{ route('terms') }}" class="text-sm text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                    <li><a href="{{ route('terms') }}" class="text-sm text-gray-400 hover:text-white transition">Terms of Service</a></li> --}}
                 </ul>
             </div>
             <div>
