@@ -35,11 +35,7 @@ Route::get('/blog/category/{category:slug}', [App\Http\Controllers\BlogControlle
 Route::get('/blog/tag/{tag:slug}', [App\Http\Controllers\BlogController::class, 'tag'])->name('blog.tag');
 Route::get('/blog/{post:slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
 
-Route::get('/about', fn () => view('pages.about'))->name('about');
-Route::get('/contact', fn () => view('pages.contact'))->name('contact');
-Route::get('/faq', fn () => view('pages.faq'))->name('faq');
-Route::get('/privacy-policy', fn () => view('pages.privacy'))->name('privacy');
-Route::get('/terms', fn () => view('pages.terms'))->name('terms');
+// Static pages are now served via the dynamic pages system (see bottom of this file)
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -108,3 +104,8 @@ Route::post('/payment/cancel', [App\Http\Controllers\PaymentController::class, '
 Route::post('/payment/ipn', [App\Http\Controllers\PaymentController::class, 'sslIpn'])->name('payment.ipn');
 
 require __DIR__.'/auth.php';
+
+// Dynamic pages — must be last to avoid conflicting with defined routes
+Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show'])
+    ->where('slug', '[a-zA-Z0-9\-_]+')
+    ->name('pages.show');

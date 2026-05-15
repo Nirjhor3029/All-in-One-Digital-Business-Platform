@@ -45,6 +45,8 @@ class RoleAndPermissionSeeder extends Seeder
             'post.list', 'post.create', 'post.edit', 'post.delete',
             'tag.list', 'tag.create', 'tag.edit', 'tag.delete',
             'comment.list', 'comment.create', 'comment.edit', 'comment.delete',
+            // Pages
+            'page.list', 'page.create', 'page.edit', 'page.delete',
         ];
 
         foreach ($permissions as $name) {
