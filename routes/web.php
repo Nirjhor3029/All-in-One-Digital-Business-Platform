@@ -5,10 +5,16 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StaticController;
 use App\Models\Certificate;
 use App\Services\CertificateService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
+
+
+
+Route::get('/proofcam/privacy-policy', [StaticController::class, 'proofcamPrivacyPolicy'])->name('proofcam.privacy-policy');
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
