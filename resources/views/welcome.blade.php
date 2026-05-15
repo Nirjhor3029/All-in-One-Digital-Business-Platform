@@ -290,14 +290,9 @@
                 <p class="text-muted mt-3 max-w-lg mx-auto">Real projects built with our platform and technologies</p>
             </div>
             <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
-                @foreach([
-                    ['title' => 'EduTrack Platform', 'desc' => 'Complete learning management system for schools and coaching centers with exam management, grade cards, and parent communication.', 'color' => '#6366F1', 'tech' => ['Laravel', 'Filament', 'Vue.js'], 'icon' => 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                    ['title' => 'PayFlow Gateway', 'desc' => 'Payment processing gateway with SSLCommerz integration, subscription billing, invoice generation, and multi-currency support.', 'color' => '#10B981', 'tech' => ['Laravel', 'Livewire', 'Tailwind'], 'icon' => 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
-                    ['title' => 'StockMaster ERP', 'desc' => 'Enterprise inventory management with barcode scanning, warehousing, purchase orders, and real-time stock tracking dashboard.', 'color' => '#F59E0B', 'tech' => ['Laravel', 'MySQL', 'REST API'], 'icon' => 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7'],
-                    ['title' => 'SMSBlast API', 'desc' => 'High-throughput SMS gateway API with templating engine, scheduling, delivery reports, and webhook integration for developers.', 'color' => '#EF4444', 'tech' => ['Laravel', 'Redis', 'React'], 'icon' => 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'],
-                ] as $project)
+                @forelse($projects as $project)
                 <div class="group bg-white rounded-2xl border border-gray-100 hover:border-gray-200 overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl relative">
-                    <div style="height: 7px; background: {{ $project['color'] }}" class="w-full"></div>
+                    <div style="height: 7px; background: {{ $project->color }}" class="w-full"></div>
                     <div class="p-6">
                         <div class="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -305,22 +300,26 @@
                             </svg>
                         </div>
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $project['color'] }}15">
-                                <svg class="w-5 h-5" style="color: {{ $project['color'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $project['icon'] }}"/>
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $project->color }}15">
+                                <svg class="w-5 h-5" style="color: {{ $project->color }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $project->icon_path }}"/>
                                 </svg>
                             </div>
-                            <h3 class="font-semibold text-lg">{{ $project['title'] }}</h3>
+                            <h3 class="font-semibold text-lg">{{ $project->title }}</h3>
                         </div>
-                        <p class="text-sm text-muted leading-relaxed">{{ $project['desc'] }}</p>
+                        <p class="text-sm text-muted leading-relaxed">{{ $project->description }}</p>
                         <div class="flex flex-wrap gap-2 mt-4">
-                            @foreach($project['tech'] as $tech)
-                            <span class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">{{ $tech }}</span>
+                            @foreach($project->tech_stack as $tech)
+                            <span class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">{{ is_array($tech) ? ($tech['tech'] ?? $tech) : $tech }}</span>
                             @endforeach
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-span-2 text-center py-12 text-muted">
+                    <p>No projects to show yet.</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>

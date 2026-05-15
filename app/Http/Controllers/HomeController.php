@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Post;
+use App\Models\Project;
 use App\Models\Service;
 use App\Models\Setting;
 
@@ -56,12 +57,14 @@ class HomeController extends Controller
             ['icon' => '⭐', 'value' => '4.9/5', 'label' => 'Rating', 'sub' => 'Student reviews'],
         ];
 
+        $projects = Project::active()->ordered()->get();
+
         return view('welcome', compact(
             'categories', 'settings',
             'featuredCourses', 'courses',
             'services',
             'featuredPost', 'recentPosts',
-            'stats'
+            'stats', 'projects'
         ));
     }
 }
