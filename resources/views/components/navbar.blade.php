@@ -60,16 +60,8 @@
                 Dashboard
             </a>
         @else
-            <a href="{{ route('login') }}"
-                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-primary border border-primary px-6 py-2 hover:bg-surface-container transition active:scale-95">
-                Sign In
-            </a>
-            <a href="{{ route('register') }}"
-                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
-                শুরু করুন
-            </a>
             <a href="{{ url('/contact') }}"
-                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
+                class="bg-primary text-on-primary px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-all active:scale-95">
                 Contact
             </a>
         @endauth
