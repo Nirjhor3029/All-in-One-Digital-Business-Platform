@@ -255,39 +255,6 @@
     </section>
 
 
-    {{-- ===================== CHOOSE YOUR JOURNEY (BENTO) ===================== --}}
-    <section class="py-section-gap px-margin-mobile md:px-margin-desktop">
-        <div class="max-w-container-max mx-auto">
-            <header class="mb-20 text-center md:text-left">
-                <h2
-                    class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary max-w-3xl mb-6">
-                    Where are you in your business journey?</h2>
-                <p class="font-body-lg text-body-lg text-secondary max-w-xl">
-                    Choose your current stage so we can guide you to the right solution.</p>
-            </header>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-                @foreach ($journeyCards as $card)
-                <a class="journey-card group flex flex-col p-12 bg-surface-container-lowest border border-surface-container h-[420px] justify-between"
-                    href="{{ $card['url'] }}">
-                    <div>
-                        <div
-                            class="mb-10 w-24 h-24 flex items-center justify-center border border-surface-container rounded-full group-hover:border-primary transition-colors overflow-hidden">
-                            <img class="w-16 h-16 object-contain grayscale"
-                                src="{{ asset('img/' . $card['img'] . '.png') }}" alt="{{ $card['title'] }}">
-                        </div>
-                        <h3 class="font-headline-lg text-headline-lg text-primary mb-4">{{ $card['title'] }}</h3>
-                        <p class="font-body-md text-body-md text-secondary max-w-sm">{{ $card['desc'] }}</p>
-                    </div>
-                    <div
-                        class="flex items-center gap-2 font-label-sm text-primary group-hover:gap-4 transition-all uppercase tracking-widest">
-                        <span>{{ $card['cta'] }}</span>
-                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        </div>
-    </section>
 
 
     {{-- ===================== CLIENT JOURNEY (8-STAGE ROADMAP) ===================== --}}
@@ -348,6 +315,46 @@
             </div>
         </div>
     </section>
+
+    <hr>
+        {{-- ===================== CHOOSE YOUR JOURNEY (BENTO) ===================== --}}
+    <section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container">
+        <div class="max-w-container-max mx-auto">
+            <header class="mb-20 text-center md:text-left">
+                <h2
+                    class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary max-w-3xl mb-6">
+                    Where are you in your business journey?</h2>
+                <p class="font-body-lg text-body-lg text-secondary max-w-xl">
+                    Choose your current stage so we can guide you to the right solution.</p>
+            </header>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                @foreach ($journeyCards as $card)
+                <a class="journey-card group flex flex-col p-12 bg-surface-container-lowest border border-surface-container h-[420px] justify-between"
+                    href="{{ $card['url'] }}">
+                    <div>
+                        <div
+                            class="mb-10 w-24 h-24 flex items-center justify-center border border-surface-container rounded-full group-hover:border-primary transition-colors overflow-hidden">
+                            <img class="w-16 h-16 object-contain grayscale"
+                                src="{{ asset('img/' . $card['img'] . '.png') }}" alt="{{ $card['title'] }}">
+                        </div>
+                        <h3 class="font-headline-lg text-headline-lg text-primary mb-4">{{ $card['title'] }}</h3>
+                        <p class="font-body-md text-body-md text-secondary max-w-sm">{{ $card['desc'] }}</p>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 font-label-sm text-primary group-hover:gap-4 transition-all uppercase tracking-widest">
+                        <span>{{ $card['cta'] }}</span>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+
+
+
+
 
 
     {{-- ===================== CONSULTATION CTA ===================== --}}
