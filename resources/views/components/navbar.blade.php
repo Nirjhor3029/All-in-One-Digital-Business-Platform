@@ -1,99 +1,82 @@
 <nav x-data="{ mobileOpen: false }"
-    class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-surface-container">
-    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <div class="flex justify-between items-center h-16 lg:h-20">
-            {{-- LEFT: Logo + Nav Links --}}
-            <div class="flex items-center gap-10">
-                @php
-                    $logo = \App\Models\Setting::get('site_logo');
-                    $siteName = \App\Models\Setting::get('site_name', 'আপনার Business');
-                @endphp
-                <a href="{{ url('/') }}" class="flex items-center gap-2.5 shrink-0">
-                    @if ($logo)
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($logo) }}" alt="{{ $siteName }}"
-                            class="h-8 w-auto">
-                    @else
-                        <span
-                            class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold text-sm">AB</span>
-                    @endif
-                    <span class="font-headline-md text-headline-md font-bold text-primary whitespace-nowrap">{{ $siteName }}</span>
-                </a>
+    class="fixed top-0 z-50 w-full max-w-container-max mx-auto left-1/2 -translate-x-1/2 bg-surface/80 backdrop-blur-md border-b border-surface-container flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4">
+    {{-- LEFT: Logo (design text) --}}
+    <a href="{{ url('/') }}" class="font-headline-md text-headline-md font-bold text-primary whitespace-nowrap">আপনার
+        Business</a>
 
-                <div class="hidden lg:flex items-center gap-8">
-                    @php
-                        $navLinks = [
-                            ['label' => 'Home', 'href' => route('home'), 'active' => request()->routeIs('home')],
-                            ['label' => 'Services', 'href' => route('services.index'), 'active' => request()->routeIs('services*')],
-                            ['label' => 'Products', 'href' => route('services.index'), 'active' => false],
-                            ['label' => 'Courses', 'href' => route('courses.index'), 'active' => request()->routeIs('courses*')],
-                            ['label' => 'Success Stories', 'href' => url('/'), 'active' => false],
-                            ['label' => 'About', 'href' => url('/about'), 'active' => request()->is('about')],
-                        ];
-                    @endphp
-                    @foreach ($navLinks as $link)
-                        <a href="{{ $link['href'] }}"
-                            class="font-body-md text-body-md transition-colors {{ $link['active'] ? 'text-primary font-semibold border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
-                            {{ $link['label'] }}
-                        </a>
-                    @endforeach
-                </div>
-            </div>
+    {{-- CENTER: Design menu --}}
+    @php
+        $navLinks = [
+            ['label' => 'Home', 'href' => route('home'), 'active' => request()->routeIs('home')],
+            ['label' => 'Services', 'href' => route('services.index'), 'active' => request()->routeIs('services*')],
+            ['label' => 'Products', 'href' => url('/#products'), 'active' => false],
+            ['label' => 'Courses', 'href' => route('courses.index'), 'active' => request()->routeIs('courses*')],
+            ['label' => 'Success Stories', 'href' => url('/#stories'), 'active' => false],
+            ['label' => 'About', 'href' => url('/about'), 'active' => request()->is('about')],
+        ];
+    @endphp
+    <div class="hidden lg:flex items-center gap-8">
+        @foreach ($navLinks as $link)
+            <a href="{{ $link['href'] }}"
+                class="font-body-md text-body-md transition-colors {{ $link['active'] ? 'text-primary font-semibold border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+                {{ $link['label'] }}
+            </a>
+        @endforeach
+    </div>
 
-            {{-- RIGHT: Auth Toolbar or Guest Actions --}}
-            @php
-                $cartCount = auth()->check()
-                    ? \App\Models\Cart::where('user_id', auth()->id())
-                            ->withCount('items')
-                            ->first()?->items_count ?? 0
-                    : 0;
-                $wishlistCount = auth()->check() ? \App\Models\Wishlist::where('user_id', auth()->id())->count() : 0;
-            @endphp
-            <div class="flex items-center gap-2 lg:gap-3">
-                @auth
-                    @livewire('notification-bell')
-                    <a href="{{ route('wishlist.index') }}"
-                        class="hidden sm:inline-flex p-2 text-primary hover:opacity-70 transition relative"
-                        title="Wishlist">
-                        <span class="material-symbols-outlined text-[22px]">favorite</span>
-                        @if ($wishlistCount > 0)
-                            <span
-                                class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $wishlistCount }}</span>
-                        @endif
-                    </a>
-                    <a href="{{ route('cart.index') }}"
-                        class="hidden sm:inline-flex p-2 text-primary hover:opacity-70 transition relative"
-                        title="Cart">
-                        <span class="material-symbols-outlined text-[22px]">shopping_bag</span>
-                        @if ($cartCount > 0)
-                            <span
-                                class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $cartCount }}</span>
-                        @endif
-                    </a>
+    {{-- RIGHT: Auth toolbar or guest actions --}}
+    @php
+        $cartCount = auth()->check()
+            ? \App\Models\Cart::where('user_id', auth()->id())
+                    ->withCount('items')
+                    ->first()?->items_count ?? 0
+            : 0;
+        $wishlistCount = auth()->check() ? \App\Models\Wishlist::where('user_id', auth()->id())->count() : 0;
+    @endphp
+    <div class="flex items-center gap-2 lg:gap-3">
+        @auth
+            @livewire('notification-bell')
+            <a href="{{ route('wishlist.index') }}"
+                class="hidden sm:inline-flex p-2 text-primary hover:opacity-70 transition relative"
+                title="Wishlist">
+                <span class="material-symbols-outlined text-[22px]">favorite</span>
+                @if ($wishlistCount > 0)
+                    <span
+                        class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $wishlistCount }}</span>
+                @endif
+            </a>
+            <a href="{{ route('cart.index') }}"
+                class="hidden sm:inline-flex p-2 text-primary hover:opacity-70 transition relative"
+                title="Cart">
+                <span class="material-symbols-outlined text-[22px]">shopping_bag</span>
+                @if ($cartCount > 0)
+                    <span
+                        class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold rounded-full flex items-center justify-center min-w-[18px] min-h-[18px] px-1 leading-none">{{ $cartCount }}</span>
+                @endif
+            </a>
 
-                    <a href="{{ route('dashboard') }}"
-                        class="hidden md:inline-flex text-sm font-semibold px-5 py-2 bg-primary text-on-primary rounded hover:opacity-90 transition active:scale-95">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}"
-                        class="hidden sm:inline-flex label-sm text-primary border border-primary px-5 py-2 rounded hover:bg-surface-container transition active:scale-95">
-                        Sign In
-                    </a>
-                    <a href="{{ route('register') }}"
-                        class="hidden sm:inline-flex label-sm bg-primary text-on-primary px-5 py-2 rounded hover:opacity-90 transition active:scale-95">
-                        শুরু করুন
-                    </a>
-                    <a href="{{ url('/contact') }}"
-                        class="hidden sm:inline-flex label-sm text-primary border border-primary px-5 py-2 rounded hover:bg-surface-container transition active:scale-95">
-                        Contact
-                    </a>
-                @endauth
-                <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 text-primary">
-                    <span class="material-symbols-outlined" :class="{ 'hidden': mobileOpen, 'inline-flex': !mobileOpen }">menu</span>
-                    <span class="material-symbols-outlined hidden" :class="{ 'hidden': !mobileOpen, 'inline-flex': mobileOpen }">close</span>
-                </button>
-            </div>
-        </div>
+            <a href="{{ route('dashboard') }}"
+                class="hidden md:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
+                Dashboard
+            </a>
+        @else
+            <a href="{{ route('login') }}"
+                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-primary border border-primary px-6 py-2 hover:bg-surface-container transition active:scale-95">
+                Sign In
+            </a>
+            <a href="{{ route('register') }}"
+                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
+                শুরু করুন
+            </a>
+            <a href="{{ url('/contact') }}"
+                class="hidden sm:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
+                Contact
+            </a>
+        @endauth
+        <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 text-primary">
+            <span class="material-symbols-outlined" :class="{ 'hidden': mobileOpen, 'inline-flex': !mobileOpen }">menu</span>
+            <span class="material-symbols-outlined hidden" :class="{ 'hidden': !mobileOpen, 'inline-flex': mobileOpen }">close</span>
+        </button>
     </div>
 
     {{-- MOBILE MENU --}}

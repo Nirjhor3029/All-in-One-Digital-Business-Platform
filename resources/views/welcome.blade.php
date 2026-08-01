@@ -1,16 +1,6 @@
 <x-app-layout>
     @php
-        $siteName = \App\Models\Setting::get('site_name', 'আপনার Business');
-        $heroHeadline = implode(' ', array_filter([
-            $settings['hero_headline_line1'] ?? '',
-            $settings['hero_headline_line2'] ?? '',
-            $settings['hero_headline_line3'] ?? '',
-        ])) ?: 'আপনার ব্যবসা শুরু থেকে Scale পর্যন্ত।';
-        $heroSubtitle = $settings['hero_subtitle'] ?? 'We help businesses launch, automate and grow with technology. Experience precision engineering for the modern entrepreneur.';
-
-        // -------- Core Services grid (real + fallback) --------
-        $serviceIcons = ['rocket_launch', 'developer_mode', 'smartphone', 'web', 'precision_manufacturing', 'school', 'inventory_2', 'transform'];
-        $fallbackServices = [
+        $serviceCards = [
             ['icon' => 'partner_exchange', 'title' => 'Business Consultation', 'desc' => 'Strategic planning and operational optimization for your venture.'],
             ['icon' => 'developer_mode', 'title' => 'Custom Software', 'desc' => 'Bespoke software systems built to solve unique challenges.'],
             ['icon' => 'smartphone', 'title' => 'Mobile App Dev', 'desc' => 'High-performance iOS and Android applications focused on user experience.'],
@@ -20,37 +10,19 @@
             ['icon' => 'inventory_2', 'title' => 'SaaS Products', 'desc' => 'Enterprise-grade supply chain and management systems for local markets.'],
             ['icon' => 'transform', 'title' => 'Digital Transformation', 'desc' => 'Modernizing traditional business workflows for the digital age.'],
         ];
-        $serviceCards = [];
-        foreach ($services as $i => $service) {
-            $serviceCards[] = [
-                'icon' => $serviceIcons[$i % 8],
-                'title' => $service->title,
-                'desc' => $service->short_description,
-                'url' => route('services.show', $service),
-            ];
-        }
-        while (count($serviceCards) < 8) {
-            $serviceCards[] = ['icon' => $fallbackServices[count($serviceCards)]['icon'], 'title' => $fallbackServices[count($serviceCards)]['title'], 'desc' => $fallbackServices[count($serviceCards)]['desc'], 'url' => route('services.index')];
-        }
 
-        // -------- SaaS products (subscription services + fallback) --------
-        $saasProducts = $services->filter(fn($s) => $s->plans->contains('is_subscription', true))->take(3)->values();
-        if ($saasProducts->isEmpty()) {
-            $saasProducts = collect([
-                ['title' => 'Inventory Pro XL', 'desc' => 'An enterprise-grade supply chain and warehouse management system designed for the local market.'],
-                ['title' => 'RetailFlow CRM', 'desc' => 'Customer relationship management tailored for fast-growing retail brands and service providers.'],
-                ['title' => 'EduScale Portal', 'desc' => 'Complete LMS and administrative backbone for coaching centers and private universities.'],
-            ]);
-        }
-
-        // -------- Courses fallback --------
-        $fallbackCourses = [
-            ['title' => 'Startup Foundation 101', 'desc' => 'Mastering legal, structural, and financial basics for Bangladeshi entrepreneurs.', 'modules' => 8, 'price' => '৫,০০০'],
-            ['title' => 'Automation Masterclass', 'desc' => 'Learn to use Zapier, AI, and APIs to put your business on autopilot.', 'modules' => 12, 'price' => '১২,০০০'],
-            ['title' => 'The Scale Framework', 'desc' => 'Advanced strategies for hiring, delegation, and geographic expansion.', 'modules' => 15, 'price' => '১৫,০০০'],
+        $saasProducts = [
+            ['title' => 'Inventory Pro XL', 'desc' => 'An enterprise-grade supply chain and warehouse management system designed for the local market.'],
+            ['title' => 'RetailFlow CRM', 'desc' => 'Customer relationship management tailored for fast-growing retail brands and service providers.'],
+            ['title' => 'EduScale Portal', 'desc' => 'Complete LMS and administrative backbone for coaching centers and private universities.'],
         ];
 
-        // -------- Journey / Choose-your-journey cards --------
+        $courseCards = [
+            ['title' => 'Startup Foundation 101', 'desc' => 'Mastering legal, structural, and financial basics for Bangladeshi entrepreneurs.', 'img' => 'course-foundation', 'modules' => 8, 'price' => '৫,০০০'],
+            ['title' => 'Automation Masterclass', 'desc' => 'Learn to use Zapier, AI, and APIs to put your business on autopilot.', 'img' => 'course-automation', 'modules' => 12, 'price' => '১২,০০০'],
+            ['title' => 'The Scale Framework', 'desc' => 'Advanced strategies for hiring, delegation, and geographic expansion.', 'img' => 'course-scale', 'modules' => 15, 'price' => '১৫,০০০'],
+        ];
+
         $journeyCards = [
             ['img' => 'icon-idea', 'title' => 'I have an idea', 'desc' => 'I want to start a new business and need guidance from idea to launch.', 'cta' => 'Get Started', 'url' => route('register')],
             ['img' => 'icon-business', 'title' => 'I already have a business', 'desc' => 'I want to improve, digitize, or streamline my existing business.', 'cta' => 'Modernize', 'url' => route('services.index')],
@@ -76,8 +48,10 @@
             <div class="text-left">
                 <h1
                     class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl mb-8 leading-tight text-primary">
-                    {{ $heroHeadline }}</h1>
-                <p class="font-body-lg text-body-lg text-secondary max-w-xl mb-12 leading-relaxed">{{ $heroSubtitle }}</p>
+                    আপনার ব্যবসা শুরু থেকে Scale পর্যন্ত।</h1>
+                <p class="font-body-lg text-body-lg text-secondary max-w-xl mb-12 leading-relaxed">We help businesses
+                    launch, automate and grow with technology. Experience precision engineering for the modern
+                    entrepreneur.</p>
                 <div class="flex flex-col sm:flex-row gap-6">
                     <a href="{{ route('courses.index') }}"
                         class="bg-primary text-on-primary px-10 py-5 font-label-sm text-label-sm tracking-widest uppercase transition-all hover:opacity-90 active:scale-95 text-center">Start
@@ -175,7 +149,7 @@
                             style="font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;">{{ $serviceCard['icon'] }}</span>
                         <h3 class="font-headline-md text-headline-md mb-3">{{ $serviceCard['title'] }}</h3>
                         <p class="font-body-md text-body-md text-secondary mb-6">{{ $serviceCard['desc'] }}</p>
-                        <a href="{{ $serviceCard['url'] }}"
+                        <a href="{{ route('services.index') }}"
                             class="mt-auto font-label-sm text-label-sm text-primary flex items-center gap-2 group-hover:gap-4 transition-all uppercase tracking-widest">LEARN
                             MORE <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
                     </div>
@@ -206,25 +180,8 @@
                 </div>
                 <div
                     class="relative aspect-video bg-white/5 border border-white/10 rounded-lg overflow-hidden flex items-center justify-center p-8">
-                    <div class="w-full h-full bg-surface rounded flex flex-col p-6 gap-4">
-                        <div class="flex justify-between items-center">
-                            <div class="w-2 h-2 bg-primary rounded-full"></div>
-                            <div class="label-sm text-secondary">DASHBOARD OVERVIEW</div>
-                        </div>
-                        <div class="flex-1 grid grid-cols-3 gap-3">
-                            @foreach ([['৳ 45,500', 'Total Revenue'], ['1,240', 'Enrollments'], ['48', 'Active SaaS']] as $stat)
-                                <div class="bg-surface-container-low rounded p-3 flex flex-col justify-center">
-                                    <span class="font-headline-md text-headline-md text-primary">{{ $stat[0] }}</span>
-                                    <span class="label-sm text-secondary mt-1">{{ $stat[1] }}</span>
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="flex items-end gap-2 h-16">
-                            @foreach ([40, 65, 50, 80, 60, 90, 70] as $h)
-                                <div class="flex-1 bg-primary/15 rounded-sm" style="height: {{ $h }}%"></div>
-                            @endforeach
-                        </div>
-                    </div>
+                    <img class="w-full h-full object-cover rounded" src="{{ asset('img/dashboard-mock.jpg') }}"
+                        alt="SaaS dashboard interface preview">
                 </div>
             </div>
         </div>
@@ -239,44 +196,30 @@
                     No fluff, just the systems and frameworks needed to win.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @if ($courses->isNotEmpty())
-                    @foreach ($courses as $course)
-                        <div class="flex flex-col">
-                            <a href="{{ route('courses.show', $course) }}"
-                                class="aspect-[4/3] bg-surface-container mb-6 overflow-hidden block">
-                                <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                    src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}">
-                            </a>
-                            <h4 class="font-headline-md text-headline-md text-primary mb-2">{{ $course->title }}</h4>
-                            <p class="font-body-md text-body-md text-secondary mb-4">{{ $course->short_description }}</p>
-                            <div class="mt-auto pt-4 border-t border-surface-container flex justify-between items-center">
-                                <span class="font-label-sm text-label-sm text-primary">{{ $course->sections_count }} MODULES</span>
-                                <span class="font-label-sm text-label-sm text-primary font-bold">৳ {{ number_format((float) $course->price, 0) }}</span>
-                            </div>
+                @foreach ($courseCards as $course)
+                    <div class="flex flex-col">
+                        <a href="{{ route('courses.index') }}"
+                            class="aspect-[4/3] bg-surface-container mb-6 overflow-hidden block">
+                            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                src="{{ asset('img/' . $course['img'] . '.jpg') }}" alt="{{ $course['title'] }}">
+                        </a>
+                        <h4 class="font-headline-md text-headline-md text-primary mb-2">{{ $course['title'] }}</h4>
+                        <p class="font-body-md text-body-md text-secondary mb-4">{{ $course['desc'] }}</p>
+                        <div class="mt-auto pt-4 border-t border-surface-container flex justify-between items-center">
+                            <span class="font-label-sm text-label-sm text-primary">{{ $course['modules'] }} MODULES</span>
+                            <span class="font-label-sm text-label-sm text-primary font-bold">৳ {{ $course['price'] }}</span>
                         </div>
-                    @endforeach
-                @else
-                    @foreach ($fallbackCourses as $course)
-                        <div class="flex flex-col">
-                            <div class="aspect-[4/3] bg-surface-container mb-6 overflow-hidden"></div>
-                            <h4 class="font-headline-md text-headline-md text-primary mb-2">{{ $course['title'] }}</h4>
-                            <p class="font-body-md text-body-md text-secondary mb-4">{{ $course['desc'] }}</p>
-                            <div class="mt-auto pt-4 border-t border-surface-container flex justify-between items-center">
-                                <span class="font-label-sm text-label-sm text-primary">{{ $course['modules'] }} MODULES</span>
-                                <span class="font-label-sm text-label-sm text-primary font-bold">৳ {{ $course['price'] }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>
 
-    {{-- ===================== WHY "আপনার BUSINESS"? ===================== --}}
+    {{-- ===================== WHY "আপনার Business"? ===================== --}}
     <section class="py-section-gap px-margin-mobile md:px-margin-desktop">
         <div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div>
-                <h2 class="font-headline-lg text-headline-lg text-primary mb-8">Why "{{ $siteName }}"?</h2>
+                <h2 class="font-headline-lg text-headline-lg text-primary mb-8">Why "আপনার Business"?</h2>
                 <div class="space-y-12">
                     @foreach ([
                         ['01', 'Partnership over Projects', "We don't just deliver code; we embed ourselves in your growth journey as your dedicated technical partner."],
@@ -295,10 +238,9 @@
                 </div>
             </div>
             <div class="relative">
-                <div
-                    class="aspect-square bg-surface-container overflow-hidden rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-secondary opacity-40"
-                        style="font-size: 180px; font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 48;">groups</span>
+                <div class="aspect-square bg-surface-container overflow-hidden rounded-lg">
+                    <img class="w-full h-full object-cover grayscale"
+                        src="{{ asset('img/team-collab.jpg') }}" alt="Our team collaborating in the studio">
                 </div>
             </div>
         </div>
@@ -312,7 +254,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 @foreach ([
-                    ['storefront', '"{{ $siteName }} replaced our manual bookkeeping with a custom CRM. Our efficiency tripled in 4 months."', 'RAHAT CHOWDHURY', 'CEO, Modina Logistics'],
+                    ['storefront', '"আপনার Business replaced our manual bookkeeping with a custom CRM. Our efficiency tripled in 4 months."', 'RAHAT CHOWDHURY', 'CEO, Modina Logistics'],
                     ['rocket_launch', '"From a simple idea to a fully automated SaaS platform. They are the best technical team I\'ve ever worked with."', 'SARAH ISLAM', 'Founder, EduNext BD'],
                 ] as $story)
                     <div
@@ -335,7 +277,9 @@
     {{-- ===================== CONSULTATION CTA ===================== --}}
     <section class="py-section-gap px-margin-mobile md:px-margin-desktop text-center">
         <div class="max-w-container-max mx-auto border-y border-surface-container py-24">
-            <h2 class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary mb-8">পরবর্তী ধাপে যেতে প্রস্তুত?</h2>
+            <h2
+                class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary mb-8">পরবর্তী
+                ধাপে যেতে প্রস্তুত?</h2>
             <p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto mb-12">আপনার বিজনেস আইডিয়া বা চলমান
                 সমস্যা নিয়ে আমাদের সাথে আলোচনা করুন। আমরা আছি আপনার পাশে।</p>
             <a href="{{ route('register') }}"
