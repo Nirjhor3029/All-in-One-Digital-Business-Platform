@@ -39,6 +39,17 @@
     ['icon' => 'automation', 'label' => 'Automation'],
     ['icon' => 'trending_up', 'label' => 'Growth'],
     ];
+
+    $roadmapStages = [
+    ['title' => 'Business Idea', 'subtitle' => 'Visionary Thinking'],
+    ['title' => 'Planning', 'subtitle' => 'Strategic Blueprint'],
+    ['title' => 'Brand Identity', 'subtitle' => 'Visual Essence'],
+    ['title' => 'Website', 'subtitle' => 'Digital Home'],
+    ['title' => 'Software', 'subtitle' => 'Custom Tools'],
+    ['title' => 'Automation', 'subtitle' => 'Operational Efficiency'],
+    ['title' => 'Growth', 'subtitle' => 'Market Capture'],
+    ['title' => 'Scale', 'subtitle' => 'Global Domination'],
+    ];
     @endphp
 
     {{-- ===================== SPLIT HERO ===================== --}}
@@ -273,6 +284,66 @@
                         <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </div>
                 </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+
+    {{-- ===================== CLIENT JOURNEY (8-STAGE ROADMAP) ===================== --}}
+    <section class="py-section-gap px-margin-mobile md:px-margin-desktop">
+        <header class="max-w-container-max mx-auto px-0 text-center mb-24">
+            <h1
+                class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary mb-6">
+                The Client Journey: From Idea to Scale</h1>
+            <p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">
+                A definitive roadmap designed for visionaries. We take your seed of an idea and cultivate it into a
+                global enterprise through our 8-stage architectural process.</p>
+        </header>
+        <div class="max-w-4xl mx-auto px-0 relative">
+            <div class="roadmap-line"></div>
+            <div class="flex flex-col gap-12 relative">
+                @foreach ($roadmapStages as $i => $stage)
+                    @if ($i % 2 === 0)
+                        <div class="flex items-start md:justify-center group">
+                            <div class="hidden md:flex flex-1 justify-end pr-12 pt-4">
+                                <span
+                                    class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                            <div
+                                class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-background shrink-0">{{ $i + 1 }}</div>
+                            <div class="flex-1 pl-8 md:pl-12">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="flex items-start md:justify-center group">
+                            <div class="flex-1 pr-8 md:pr-12 text-right hidden md:block">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                            <div
+                                class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-background shrink-0">{{ $i + 1 }}</div>
+                            <div class="flex-1 pl-8 md:pl-12 block md:hidden">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                            <div class="hidden md:flex flex-1 justify-start pl-12 pt-4">
+                                <span
+                                    class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                        </div>
+                    @endif
                 @endforeach
             </div>
         </div>
