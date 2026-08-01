@@ -1,3 +1,74 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #fbf9f9;
+        color: #1b1c1c;
+    }
+}
+
+@layer components {
+    .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .label-sm {
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .active-nav-link {
+        border-bottom: 2px solid #000;
+        font-weight: 600;
+    }
+
+    .journey-card {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .journey-card:hover {
+        transform: scale(0.985);
+        border-color: #000;
+    }
+
+    .journey-line::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #efeded;
+        z-index: 0;
+    }
+
+    @media (max-width: 767px) {
+        .journey-line::before {
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            height: auto;
+        }
+    }
+}
