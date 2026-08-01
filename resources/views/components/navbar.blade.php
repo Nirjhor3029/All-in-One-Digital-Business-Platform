@@ -1,5 +1,6 @@
 <nav x-data="{ mobileOpen: false }"
-    class="fixed top-0 z-50 w-full max-w-container-max mx-auto left-1/2 -translate-x-1/2 bg-surface/80 backdrop-blur-md border-b border-surface-container flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4">
+    class="fixed top-0 z-50 w-full bg-surface/80 backdrop-blur-md border-b border-surface-container">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center">
     {{-- LEFT: Logo (design text) --}}
     <a href="{{ url('/') }}" class="font-headline-md text-headline-md font-bold text-primary whitespace-nowrap">আপনার
         Business</a>
@@ -69,6 +70,7 @@
             <span class="material-symbols-outlined" :class="{ 'hidden': mobileOpen, 'inline-flex': !mobileOpen }">menu</span>
             <span class="material-symbols-outlined hidden" :class="{ 'hidden': !mobileOpen, 'inline-flex': mobileOpen }">close</span>
         </button>
+    </div>
     </div>
 
     {{-- MOBILE MENU --}}
