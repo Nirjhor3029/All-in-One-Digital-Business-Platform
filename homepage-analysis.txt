@@ -1,0 +1,148 @@
+==================================================================
+  HOMEPAGE ANALYSIS — http://apnar-business-open.test/
+  Route: GET / → HomeController@index → welcome.blade.php
+==================================================================
+
+LAYOUT WRAPPER:
+  - <x-app-layout> → AppLayout.php → renders:
+      - components/navbar.blade.php (logo, menu, Livewire notification bell, auth links)
+      - components/footer.blade.php
+      - components/toast.blade.php
+      - @vite (Tailwind + JS)
+      - @livewireStyles / @livewireScripts
+      - Alpine.js
+
+==================================================================
+SECTION 1: HERO
+==================================================================
+  - Badge (from $settings['hero_badge'] or default)
+  - Headline: 3 lines (hero_headline_line1/2/3) — default: "শিখুন। বানান। বাড়ান।"
+  - Subtitle (hero_subtitle)
+  - Two CTA buttons: "কোর্স দেখুন" → courses.index, "Demo দেখুন" → #
+  - Social proof: avatar group (5 UI avatars), "$settings['hero_social_proof']" (default: "2,450+ জন শিখছেন"), rating "4.9/5"
+  - Right side (desktop only): Animated Dashboard Preview card
+      - "Dashboard Overview" header with "● Live" badge
+      - Total Revenue: ৳45,500 (+12.5%)
+      - Enrollments: 1,240 (+8.3%)
+      - 7-day bar chart
+      - Floating elements: "✓ Payment সফল!", "+12 আজকে", "48 Active SaaS Clients"
+
+==================================================================
+SECTION 2: STATS BAR
+==================================================================
+  - 4-column grid from $settings['stats'] (JSON, has hardcoded fallback)
+  - Default stats:
+      1. 📚 50+ Courses — Expert-led
+      2. 👥 2,450+ Students — Active learners
+      3. 🛠 20+ Products — SaaS solutions
+      4. ⭐ 4.9/5 Rating — Student reviews
+
+==================================================================
+SECTION 3: POPULAR COURSES
+==================================================================
+  - Badge: "LMS Platform"
+  - Title: "জনপ্রিয় কোর্সসমূহ"
+  - Description: "Expert-led courses designed to take your skills to the next level"
+  - Data: $courses → Course::published()->latest()->take(6)
+  - Eager loads: instructor, category; withCount: enrollments
+  - 6 course cards, 3-column grid:
+      - Gradient image placeholder with badge (Bestseller/New/Popular)
+      - Level badge (Beginner/Intermediate/Advanced)
+      - Category name, course title, instructor name
+      - Star rating (4.8) + enrollment count
+      - Lecture count + duration
+      - Price (with discount line-through if applicable)
+      - "কিনুন" button → courses.show
+  - "সব কোর্স দেখুন" link → courses.index
+
+==================================================================
+SECTION 4: SOFTWARE SOLUTIONS (SaaS SERVICES)
+==================================================================
+  - Badge: "Software Marketplace"
+  - Title: "আমাদের Software Solutions"
+  - Description: "Ready-made enterprise software for your business needs"
+  - Data: $services → Service::with('plans')->published()->latest()->take(4)
+  - If $services is empty → 4 hardcoded fallback items:
+      1. Coaching Management — ৳3,000/mo
+      2. School ERP — ৳5,000/mo
+      3. SMS Automation — ৳1,500/mo
+      4. Inventory ERP — ৳4,000/mo
+  - Each card: icon, "SaaS" badge, title, short description, price (min plan price)
+  - "সব Services দেখুন" link → services.index
+
+==================================================================
+SECTION 5: PROJECT SHOWCASE (PORTFOLIO)
+==================================================================
+  - Badge: "Portfolio"
+  - Title: "Project Showcase"
+  - Description: "Real projects built with our platform and technologies"
+  - Data: $projects → Project::active()->ordered()->get()
+  - Each project card (2-column grid):
+      - Colored top bar ($project->color)
+      - Icon, title, description
+      - Tech stack tags (from JSON field)
+      - External link icon on hover
+
+==================================================================
+SECTION 6: BLOG & TUTORIALS
+==================================================================
+  - Badge: "Blog & Tutorials"
+  - Title: "সাম্প্রতিক লেখালেখি"
+  - Description: "Tips, tutorials, and insights from our experts"
+  - Data:
+      - $featuredPost → Post::published()->latest()->first() (large card, 2 cols)
+      - $recentPosts → Post::published()->latest()->skip(1)->take(2) (small cards, 1 col)
+  - Featured post card: gradient image, category badge, title, excerpt, author, date, "5 min read", "142 views"
+  - Recent post cards: category badge, title, excerpt, date, "3 min read"
+  - If no posts → 2 hardcoded fallback items
+  - "সব লেখা পড়ুন" link → blog.index
+
+==================================================================
+SECTION 7: TESTIMONIALS (Alpine.js Slider)
+==================================================================
+  - Badge: "Client Feedback"
+  - Title: "তারা কী বলছেন?"
+  - 3 hardcoded testimonials:
+      1. রফিকুল আলম — Director, EduCare Coaching — "Coaching Management"
+      2. Shahina Khanam — Principal, Sunshine Academy — "School ERP"
+      3. Md. Tariqul Islam — CEO, TechMart BD — "SMS Automation"
+  - Features: auto-slide (5s), progress bar, dot navigation, star rating (5/5), quote, role, badge
+
+==================================================================
+SECTION 8: HOW IT WORKS (3 STEPS)
+==================================================================
+  - Badge: "How It Works"
+  - Title: "শুধু ৩টি ধাপ"
+  - Description: "Getting started with Apnar Business is quick and easy"
+  - 3 steps with gradient icons:
+      1. STEP 01 — "বেছে নিন" — Browse courses & SaaS products
+      2. STEP 02 — "Payment করুন" — SSLCommerz, bKash, Nagad, Card
+      3. STEP 03 — "শুরু করুন" — Personalized dashboard
+  - Dashed connector line between steps (desktop only)
+
+==================================================================
+SECTION 9: CTA BANNER
+==================================================================
+  - Title: "আজই শুরু করুন"
+  - Description: "Join 2,450+ learners... Special discount available for first month!"
+  - 2 buttons: "Register করুন — বিনামূল্যে" → register, "Demo দেখুন" → #
+  - 3 trust signals with icons:
+      - 🔒 SSL Secured
+      - ✅ 30-day Refund
+      - 🛠 24/7 Support
+
+==================================================================
+DATA SOURCES (Controller → Model Queries)
+==================================================================
+  Categories  | Category      | whereHas('typeRel', slug=course) where is_active=true
+  Settings    | Setting       | pluck('value', 'key')
+  Courses     | Course        | published()->featured()->take(6) + published()->latest()->take(6)
+  Services    | Service       | with('plans')->published()->latest()->take(4)
+  Featured    | Post          | published()->latest()->first()
+  Recent      | Post          | published()->latest()->skip(1)->take(2)
+  Stats       | Setting       | JSON from 'stats' key (with hardcoded fallback)
+  Projects    | Project       | active()->ordered()->get()
+
+==================================================================
+END OF ANALYSIS
+==================================================================
