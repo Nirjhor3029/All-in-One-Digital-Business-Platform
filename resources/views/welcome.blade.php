@@ -255,102 +255,99 @@
     </section>
 
 
-    {{-- ===================== JOURNEY + ROADMAP (SIDE BY SIDE) ===================== --}}
+    {{-- ===================== CHOOSE YOUR JOURNEY (BENTO) ===================== --}}
     <section class="py-section-gap px-margin-mobile md:px-margin-desktop">
-        <div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
-            {{-- LEFT: Choose Your Journey (bento) --}}
-            <div class="bg-surface-container-low p-8 md:p-12 rounded-xl">
-                <header class="mb-12 text-center md:text-left">
-                    <h2 class="font-headline-lg text-headline-lg text-primary max-w-3xl mb-6">
-                        Where are you in your business journey?</h2>
-                    <p class="font-body-lg text-body-lg text-secondary max-w-xl">
-                        Choose your current stage so we can guide you to the right solution.</p>
-                </header>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter">
-                    @foreach ($journeyCards as $card)
-                    <a class="journey-card group flex flex-col p-8 bg-surface-container-lowest border border-surface-container h-[380px] justify-between"
-                        href="{{ $card['url'] }}">
-                        <div>
-                            <div
-                                class="mb-10 w-24 h-24 flex items-center justify-center border border-surface-container rounded-full group-hover:border-primary transition-colors overflow-hidden">
-                                <img class="w-16 h-16 object-contain grayscale"
-                                    src="{{ asset('img/' . $card['img'] . '.png') }}" alt="{{ $card['title'] }}">
-                            </div>
-                            <h3 class="font-headline-md text-headline-md text-primary mb-4">{{ $card['title'] }}</h3>
-                            <p class="font-body-md text-body-md text-secondary max-w-sm">{{ $card['desc'] }}</p>
-                        </div>
+        <div class="max-w-container-max mx-auto">
+            <header class="mb-20 text-center md:text-left">
+                <h2
+                    class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary max-w-3xl mb-6">
+                    Where are you in your business journey?</h2>
+                <p class="font-body-lg text-body-lg text-secondary max-w-xl">
+                    Choose your current stage so we can guide you to the right solution.</p>
+            </header>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                @foreach ($journeyCards as $card)
+                <a class="journey-card group flex flex-col p-12 bg-surface-container-lowest border border-surface-container h-[420px] justify-between"
+                    href="{{ $card['url'] }}">
+                    <div>
                         <div
-                            class="flex items-center gap-2 font-label-sm text-primary group-hover:gap-4 transition-all uppercase tracking-widest">
-                            <span>{{ $card['cta'] }}</span>
-                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                            class="mb-10 w-24 h-24 flex items-center justify-center border border-surface-container rounded-full group-hover:border-primary transition-colors overflow-hidden">
+                            <img class="w-16 h-16 object-contain grayscale"
+                                src="{{ asset('img/' . $card['img'] . '.png') }}" alt="{{ $card['title'] }}">
                         </div>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- RIGHT: Client Journey (8-stage roadmap) --}}
-            <div class="bg-surface-container-low p-8 md:p-12 rounded-xl">
-                <header class="text-center mb-16">
-                    <h2 class="font-headline-lg text-headline-lg text-primary mb-6">
-                        The Client Journey: From Idea to Scale</h2>
-                    <p class="font-body-md text-body-md text-secondary max-w-md mx-auto">
-                        A definitive roadmap designed for visionaries. We take your seed of an idea and cultivate it
-                        into a global enterprise through our 8-stage architectural process.</p>
-                </header>
-                <div class="max-w-lg mx-auto relative">
-                    <div class="roadmap-line"></div>
-                    <div class="flex flex-col gap-12 relative">
-                        @foreach ($roadmapStages as $i => $stage)
-                            @if ($i % 2 === 0)
-                                <div class="flex items-start md:justify-center group">
-                                    <div class="hidden md:flex flex-1 justify-end pr-10 pt-4">
-                                        <span
-                                            class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                                    </div>
-                                    <div
-                                        class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-surface-container-low shrink-0">{{ $i + 1 }}</div>
-                                    <div class="flex-1 pl-8 md:pl-10">
-                                        <div
-                                            class="stage-card bg-surface-container-lowest border border-surface-container p-6 rounded-lg">
-                                            <h3 class="font-headline-md text-headline-md text-primary">{{ $stage['title'] }}</h3>
-                                            <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="flex items-start md:justify-center group">
-                                    <div class="flex-1 pr-8 md:pr-10 text-right hidden md:block">
-                                        <div
-                                            class="stage-card bg-surface-container-lowest border border-surface-container p-6 rounded-lg">
-                                            <h3 class="font-headline-md text-headline-md text-primary">{{ $stage['title'] }}</h3>
-                                            <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-surface-container-low shrink-0">{{ $i + 1 }}</div>
-                                    <div class="flex-1 pl-8 md:pl-10 block md:hidden">
-                                        <div
-                                            class="stage-card bg-surface-container-lowest border border-surface-container p-6 rounded-lg">
-                                            <h3 class="font-headline-md text-headline-md text-primary">{{ $stage['title'] }}</h3>
-                                            <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="hidden md:flex flex-1 justify-start pl-10 pt-4">
-                                        <span
-                                            class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
+                        <h3 class="font-headline-lg text-headline-lg text-primary mb-4">{{ $card['title'] }}</h3>
+                        <p class="font-body-md text-body-md text-secondary max-w-sm">{{ $card['desc'] }}</p>
                     </div>
-                </div>
+                    <div
+                        class="flex items-center gap-2 font-label-sm text-primary group-hover:gap-4 transition-all uppercase tracking-widest">
+                        <span>{{ $card['cta'] }}</span>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </div>
+                </a>
+                @endforeach
             </div>
-
         </div>
     </section>
 
+
+    {{-- ===================== CLIENT JOURNEY (8-STAGE ROADMAP) ===================== --}}
+    <section class="py-section-gap px-margin-mobile md:px-margin-desktop">
+        <header class="max-w-container-max mx-auto px-0 text-center mb-24">
+            <h1
+                class="font-headline-xl-mobile md:font-headline-xl text-headline-xl-mobile md:text-headline-xl text-primary mb-6">
+                The Client Journey: From Idea to Scale</h1>
+            <p class="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">
+                A definitive roadmap designed for visionaries. We take your seed of an idea and cultivate it into a
+                global enterprise through our 8-stage architectural process.</p>
+        </header>
+        <div class="max-w-4xl mx-auto px-0 relative">
+            <div class="roadmap-line"></div>
+            <div class="flex flex-col gap-12 relative">
+                @foreach ($roadmapStages as $i => $stage)
+                    @if ($i % 2 === 0)
+                        <div class="flex items-start md:justify-center group">
+                            <div class="hidden md:flex flex-1 justify-end pr-12 pt-4">
+                                <span
+                                    class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                            <div
+                                class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-background shrink-0">{{ $i + 1 }}</div>
+                            <div class="flex-1 pl-8 md:pl-12">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="flex items-start md:justify-center group">
+                            <div class="flex-1 pr-8 md:pr-12 text-right hidden md:block">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                            <div
+                                class="z-10 bg-primary w-12 h-12 rounded-full flex items-center justify-center text-on-primary font-bold border-4 border-background shrink-0">{{ $i + 1 }}</div>
+                            <div class="flex-1 pl-8 md:pl-12 block md:hidden">
+                                <div
+                                    class="stage-card bg-surface-container-lowest border border-surface-container p-8 rounded-lg">
+                                    <h3 class="font-headline-lg text-primary">{{ $stage['title'] }}</h3>
+                                    <p class="detail-text text-secondary font-body-md">{{ $stage['subtitle'] }}</p>
+                                </div>
+                            </div>
+                            <div class="hidden md:flex flex-1 justify-start pl-12 pt-4">
+                                <span
+                                    class="text-surface-dim font-headline-md opacity-20">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </section>
 
 
     {{-- ===================== CONSULTATION CTA ===================== --}}
