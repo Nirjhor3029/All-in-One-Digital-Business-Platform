@@ -15,6 +15,13 @@ class DatabaseSeeder extends Seeder
             SettingsSeeder::class,
             RoleAndPermissionSeeder::class,
             PageSeeder::class,
+            ProjectSeeder::class,
+            CourseSeeder::class,
+            ServiceSeeder::class,
+            PostSeeder::class,
+            CouponSeeder::class,
+            EnrollmentSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }
