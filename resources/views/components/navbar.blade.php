@@ -56,11 +56,6 @@
                 @endif
             </a>
 
-            <a href="{{ route('dashboard') }}"
-                class="hidden md:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
-                Dashboard
-            </a>
-
             <div x-data="{ userMenuOpen: false }" @click.away="userMenuOpen = false"
                 class="relative hidden md:block">
                 <button type="button" @click="userMenuOpen = !userMenuOpen"
@@ -96,8 +91,16 @@
             </div>
         @else
             <a href="{{ url('/contact') }}"
-                class="bg-primary text-on-primary px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-all active:scale-95">
+                class="hidden sm:inline-flex font-body-md text-body-md text-secondary hover:text-primary transition">
                 Contact
+            </a>
+            <a href="{{ route('login') }}"
+                class="inline-flex font-label-sm text-label-sm uppercase tracking-wider text-primary border border-primary px-5 py-2 hover:bg-primary/5 transition active:scale-95">
+                Sign In
+            </a>
+            <a href="{{ route('register') }}"
+                class="hidden md:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
+                Register
             </a>
         @endauth
         <button @click="mobileOpen = !mobileOpen" class="lg:hidden p-2 text-primary">
