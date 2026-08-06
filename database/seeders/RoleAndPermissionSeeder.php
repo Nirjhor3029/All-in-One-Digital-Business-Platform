@@ -58,9 +58,8 @@ class RoleAndPermissionSeeder extends Seeder
 
         $userRole = Role::firstOrCreate(['name' => 'User', 'guard_name' => 'web']);
 
-        $admin = User::where('email', 'admin@apnarbusiness.com')->first();
-        if ($admin) {
-            $admin->assignRole('Super Admin');
+        foreach (User::all() as $user) {
+            $user->syncRoles($user->role === 'admin' ? 'Super Admin' : 'User');
         }
     }
 }

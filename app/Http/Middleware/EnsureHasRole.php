@@ -10,7 +10,9 @@ class EnsureHasRole
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()?->roles()->exists()) {
+        $user = $request->user();
+
+        if (! $user || (! $user->roles()->exists() && $user->role !== 'admin')) {
             abort(403);
         }
 
