@@ -20,16 +20,34 @@ class LearningController extends Controller
 
         $course->load(['sections.lectures']);
 
-        $progress = LectureProgress::firstOrCreate([
-            'user_id' => auth()->id(),
-            'lecture_id' => $lecture->id,
-        ]);
+        $isEnrolled = $course->is_free
+            || $course->user_id === auth()->id()
+            || $course->enrollments()->where('user_id', auth()->id())->exists();
+
+        $progress = null;
+
+        if ($isEnrolled) {
+            $progress = LectureProgress::firstOrCreate([
+                'user_id' => auth()->id(),
+                'lecture_id' => $lecture->id,
+            ]);
+        }
 
         return view('learn.player', compact('course', 'lecture', 'progress'));
     }
 
     public function markComplete(Request $request, Lecture $lecture)
     {
+        $course = $lecture->section->course;
+
+        $isEnrolled = $course->is_free
+            || $course->user_id === auth()->id()
+            || $course->enrollments()->where('user_id', auth()->id())->exists();
+
+        if (! $isEnrolled) {
+            abort(403, 'You are not enrolled in this course.');
+        }
+
         $progress = LectureProgress::updateOrCreate(
             [
                 'user_id' => auth()->id(),
@@ -41,7 +59,6 @@ class LearningController extends Controller
             ]
         );
 
-        $course = $lecture->section->course;
         $allLectures = $course->sections()->with('lectures')->get()->pluck('lectures')->flatten();
         $total = $allLectures->count();
 

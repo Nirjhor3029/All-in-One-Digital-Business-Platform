@@ -36,16 +36,33 @@
             <h1 class="font-display text-2xl font-bold">{{ $currentLecture->title }}</h1>
 
             <div class="flex items-center gap-4 mt-3">
-                <button wire:click="toggleComplete"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-btn text-sm font-medium transition
-                        {{ $completed ? 'bg-success/10 text-success' : 'bg-gray-100 text-muted hover:bg-gray-200' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="{{ $completed ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' : 'M9 12l2 2 4-4' }}"/>
-                    </svg>
-                    {{ $completed ? 'Completed' : 'Mark as Complete' }}
-                </button>
+                @if($this->isEnrolled)
+                    <button wire:click="toggleComplete"
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-btn text-sm font-medium transition
+                            {{ $completed ? 'bg-success/10 text-success' : 'bg-gray-100 text-muted hover:bg-gray-200' }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="{{ $completed ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' : 'M9 12l2 2 4-4' }}"/>
+                        </svg>
+                        {{ $completed ? 'Completed' : 'Mark as Complete' }}
+                    </button>
+                @else
+                    <a href="{{ route('courses.show', $course) }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-btn text-sm font-semibold bg-accent text-white hover:bg-accent-hover transition">
+                        Enroll to Track Progress
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </a>
+                @endif
             </div>
+
+            @unless($this->isEnrolled)
+                <div class="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-card">
+                    <p class="text-sm text-muted">You're viewing a free preview. Enroll in the course to unlock the full
+                        curriculum, track your progress, and earn your certificate.</p>
+                </div>
+            @endunless
 
             @if($currentLecture->content)
                 <div class="prose prose-gray max-w-none mt-6">
@@ -53,7 +70,7 @@
                 </div>
             @endif
 
-            @if($courseCompleted)
+            @if($this->isEnrolled && $courseCompleted)
                 <div class="mt-6 p-4 bg-success/5 border border-success/20 rounded-card">
                     <div class="flex items-center gap-3">
                         <svg class="w-8 h-8 text-success shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,10 +127,14 @@
     <div class="lg:w-80 shrink-0 border-l border-gray-200 bg-white course-sidebar">
         <div class="p-4 border-b border-gray-100">
             <h3 class="font-semibold text-sm">{{ $course->title }}</h3>
-            <div class="mt-2 bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-accent h-full rounded-full transition-all duration-500" style="width: {{ $this->progressPercentage }}%"></div>
-            </div>
-            <p class="text-xs text-muted mt-1">{{ $this->progressPercentage }}% complete</p>
+            @if($this->isEnrolled)
+                <div class="mt-2 bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-accent h-full rounded-full transition-all duration-500" style="width: {{ $this->progressPercentage }}%"></div>
+                </div>
+                <p class="text-xs text-muted mt-1">{{ $this->progressPercentage }}% complete</p>
+            @else
+                <p class="text-xs text-accent font-medium mt-1">Free preview</p>
+            @endif
         </div>
         <div class="divide-y divide-gray-100">
             @foreach($allLectures as $index => $lecture)

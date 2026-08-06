@@ -16,11 +16,20 @@ class CoursePlayer extends Component
     public Course $course;
     public Lecture $currentLecture;
     public bool $completed = false;
+    public bool $isEnrolled = false;
 
     public function mount(Course $course, Lecture $lecture)
     {
         $this->course = $course;
         $this->currentLecture = $lecture;
+
+        $this->isEnrolled = $course->is_free
+            || $course->user_id === auth()->id()
+            || $course->enrollments()->where('user_id', auth()->id())->exists();
+
+        if (! $this->isEnrolled) {
+            return;
+        }
 
         $progress = LectureProgress::where('user_id', auth()->id())
             ->where('lecture_id', $lecture->id)
@@ -31,6 +40,10 @@ class CoursePlayer extends Component
 
     public function toggleComplete()
     {
+        if (! $this->isEnrolled) {
+            return;
+        }
+
         LectureProgress::updateOrCreate(
             [
                 'user_id' => auth()->id(),

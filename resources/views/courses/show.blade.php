@@ -41,17 +41,23 @@
                             <div x-show="open" x-collapse>
                                 <div class="border-t border-gray-100 divide-y divide-gray-50">
                                     @foreach($section->lectures as $lecture)
-                                    <div class="flex items-center gap-3 px-5 py-3 text-sm">
-                                        <svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                        <span class="flex-1">{{ $lecture->title }}</span>
-                                        @if($lecture->is_free)
-                                            <span class="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">Free</span>
-                                        @endif
-                                        <span class="text-xs text-muted">{{ gmdate('i:s', $lecture->duration) }}</span>
-                                    </div>
+                                        @php $clickable = $lecture->is_free || $isEnrolled; @endphp
+                                        <a href="{{ $clickable ? route('learn.player', [$course, $lecture]) : '#' }}"
+                                           class="flex items-center gap-3 px-5 py-3 text-sm {{ $clickable ? 'hover:bg-gray-50' : 'cursor-default' }}">
+                                            <svg class="w-4 h-4 {{ $clickable ? 'text-primary' : 'text-muted' }} shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span class="flex-1 {{ $lecture->is_free ? 'text-primary font-medium' : '' }}">{{ $lecture->title }}</span>
+                                            @if($lecture->is_free)
+                                                <span class="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">Free</span>
+                                            @elseif(!$isEnrolled)
+                                                <svg class="w-4 h-4 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                </svg>
+                                            @endif
+                                            <span class="text-xs text-muted">{{ gmdate('i:s', $lecture->duration) }}</span>
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>

@@ -20,7 +20,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
-Route::post('/courses/{course:slug}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
+Route::post('/courses/{course:slug}/enroll', [CourseController::class, 'enroll'])
+    ->middleware('auth')
+    ->name('courses.enroll');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course:slug}/learn/{lecture:slug}', [LearningController::class, 'player'])
@@ -28,8 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->withoutScopedBindings()
         ->name('learn.player');
     Route::post('/lectures/{lecture}/complete', [LearningController::class, 'markComplete'])
+        ->middleware('enrolled')
         ->name('lectures.complete');
     Route::get('/courses/{course:slug}/progress', [LearningController::class, 'progress'])
+        ->middleware('enrolled')
         ->name('courses.progress');
 });
 

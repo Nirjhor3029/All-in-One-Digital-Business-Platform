@@ -1,0 +1,4 @@
+Both changes verified:
+1. EnsureHasRole.php — now accepts users.role === 'admin' in addition to spatie pivot roles.
+2. RoleAndPermissionSeeder.php — idempotent syncRoles() for all users based on the role column; re-seeding on live rebuilds the pivot. Verified: admin@apnarbusiness.com → Super Admin, user@apnarbusiness.com → User.
+On live, just run php artisan db:seed --class=RoleAndPermissionSeeder to rebuild role assignments. Want me to commit and push these changes?
