@@ -4,23 +4,17 @@ namespace App\Filament\Resources\LectureResource\Pages;
 
 use App\Filament\Resources\LectureResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditLecture extends EditRecord
+class ViewLecture extends ViewRecord
 {
     protected static string $resource = LectureResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
+            Actions\EditAction::make(),
             Actions\DeleteAction::make(),
         ];
-    }
-
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        $data['course_id'] = $this->record->section?->course_id;
-
-        return $data;
     }
 }

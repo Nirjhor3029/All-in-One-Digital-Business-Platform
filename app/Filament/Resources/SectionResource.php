@@ -3,10 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SectionResource\Pages;
+use App\Filament\Resources\SectionResource\RelationManagers\LecturesRelationManager;
 use App\Models\Section;
 use App\Filament\Traits\HasPermissionBasedAccess;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Section as InfolistSection;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -50,6 +56,33 @@ class SectionResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                InfolistSection::make('Section Details')
+                    ->schema([
+                        TextEntry::make('course.title')->label('Course'),
+                        TextEntry::make('title'),
+                        TextEntry::make('description')->columnSpanFull(),
+                        TextEntry::make('sort_order')->label('Sort Order'),
+                        TextEntry::make('created_at')->dateTime(),
+                    ])->columns(3),
+
+                InfolistSection::make('Lectures')
+                    ->schema([
+                        RepeatableEntry::make('lectures')
+                            ->schema([
+                                TextEntry::make('title'),
+                                TextEntry::make('duration')
+                                    ->formatStateUsing(fn ($state) => gmdate('i:s', $state)),
+                                IconEntry::make('is_free')->boolean(),
+                            ])
+                            ->columns(3),
+                    ]),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -82,6 +115,7 @@ class SectionResource extends Resource
                     ->preload(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -95,7 +129,7 @@ class SectionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            LecturesRelationManager::class,
         ];
     }
 
@@ -104,6 +138,7 @@ class SectionResource extends Resource
         return [
             'index' => Pages\ListSections::route('/'),
             'create' => Pages\CreateSection::route('/create'),
+            'view' => Pages\ViewSection::route('/{record}'),
             'edit' => Pages\EditSection::route('/{record}/edit'),
         ];
     }

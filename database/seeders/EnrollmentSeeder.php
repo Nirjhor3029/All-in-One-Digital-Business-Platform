@@ -19,15 +19,21 @@ class EnrollmentSeeder extends Seeder
         $automation = Course::where('slug', 'automation-masterclass')->first();
 
         $enrollments = [
-            ['user_id' => $admin->id, 'course_id' => $courses->id, 'status' => 'completed', 'completed_at' => now()->subDays(10)],
-            ['user_id' => $admin->id, 'course_id' => $webDev->id, 'status' => 'in_progress', 'completed_at' => null],
-            ['user_id' => $user->id, 'course_id' => $automation->id, 'status' => 'in_progress', 'completed_at' => null],
-            ['user_id' => $user->id, 'course_id' => $courses->id, 'status' => 'not_started', 'completed_at' => null],
-            ['user_id' => $user->id, 'course_id' => $webDev->id, 'status' => 'not_started', 'completed_at' => null],
+            ['user_id' => $admin->id, 'course_id' => $courses->id, 'status' => 'active', 'completed_at' => now()->subDays(10)],
+            ['user_id' => $admin->id, 'course_id' => $webDev->id, 'status' => 'active', 'completed_at' => null],
+            ['user_id' => $user->id, 'course_id' => $automation->id, 'status' => 'active', 'completed_at' => null],
+            ['user_id' => $user->id, 'course_id' => $courses->id, 'status' => 'active', 'completed_at' => null],
+            ['user_id' => $user->id, 'course_id' => $webDev->id, 'status' => 'active', 'completed_at' => null],
         ];
 
         foreach ($enrollments as $enrollment) {
-            Enrollment::create($enrollment);
+            Enrollment::updateOrCreate(
+                [
+                    'user_id' => $enrollment['user_id'],
+                    'course_id' => $enrollment['course_id'],
+                ],
+                $enrollment
+            );
         }
     }
 }

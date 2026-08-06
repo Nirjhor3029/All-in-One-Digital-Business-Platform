@@ -16,4 +16,20 @@ class ListLectures extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function updatedTableFilters(): void
+    {
+        parent::updatedTableFilters();
+
+        $courseId = data_get($this->tableFilters, 'course_id.value');
+        $sectionId = data_get($this->tableFilters, 'section_id.value');
+
+        if (blank($courseId) || blank($sectionId)) {
+            return;
+        }
+
+        if (! \App\Models\Section::whereKey($sectionId)->where('course_id', $courseId)->exists()) {
+            $this->removeTableFilter('section_id');
+        }
+    }
 }

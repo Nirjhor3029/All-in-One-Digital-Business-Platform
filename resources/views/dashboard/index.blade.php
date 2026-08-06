@@ -80,7 +80,14 @@
         @else
             <div class="space-y-3">
                 @foreach($recentEnrollments as $enrollment)
-                    <div class="flex items-center gap-3">
+                    @php
+                        $firstLecture = $enrollment->course->sections->first()?->lectures->first();
+                        $enrollmentHref = $firstLecture
+                            ? route('learn.player', [$enrollment->course, $firstLecture])
+                            : route('courses.show', $enrollment->course);
+                    @endphp
+                    <a href="{{ $enrollmentHref }}"
+                       class="flex items-center gap-3 rounded-card p-1 hover:bg-gray-50 transition">
                         <div class="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden shrink-0">
                             @if($enrollment->course->thumbnail)
                                 <img src="{{ $enrollment->course->thumbnail_url }}" alt="" class="w-full h-full object-cover">
@@ -90,7 +97,7 @@
                             <p class="text-sm font-medium truncate">{{ $enrollment->course->title }}</p>
                             <p class="text-xs text-muted">{{ $enrollment->created_at->diffForHumans() }}</p>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         @endif

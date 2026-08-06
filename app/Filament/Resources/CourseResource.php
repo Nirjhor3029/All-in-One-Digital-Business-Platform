@@ -3,10 +3,17 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CourseResource\Pages;
+use App\Filament\Resources\CourseResource\RelationManagers\LecturesRelationManager;
+use App\Filament\Resources\CourseResource\RelationManagers\SectionsRelationManager;
 use App\Models\Course;
 use App\Filament\Traits\HasPermissionBasedAccess;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -99,6 +106,57 @@ class CourseResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Overview')
+                    ->schema([
+                        TextEntry::make('title'),
+                        TextEntry::make('instructor.name')->label('Instructor'),
+                        TextEntry::make('category.name')->label('Category'),
+                        TextEntry::make('price')->money('BDT'),
+                        TextEntry::make('discount_price')->money('BDT'),
+                        TextEntry::make('level')->badge(),
+                        TextEntry::make('duration_formatted')->label('Duration'),
+                        TextEntry::make('sections_count')
+                            ->state(fn (Course $record) => $record->sections()->count())
+                            ->label('Sections'),
+                        IconEntry::make('is_published')->boolean(),
+                        IconEntry::make('is_featured')->boolean(),
+                        IconEntry::make('is_free')->boolean(),
+                    ])->columns(3),
+
+                Section::make('Description')
+                    ->schema([
+                        TextEntry::make('short_description'),
+                        TextEntry::make('long_description')
+                            ->html()
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Curriculum')
+                    ->schema([
+                        RepeatableEntry::make('sections')
+                            ->schema([
+                                TextEntry::make('title'),
+                                TextEntry::make('lectures_count')
+                                    ->state(fn ($record) => $record->lectures()->count())
+                                    ->label('Lectures'),
+                                RepeatableEntry::make('lectures')
+                                    ->schema([
+                                        TextEntry::make('title'),
+                                        TextEntry::make('duration')
+                                            ->formatStateUsing(fn ($state) => gmdate('i:s', $state)),
+                                        IconEntry::make('is_free')->boolean(),
+                                    ])
+                                    ->columns(3),
+                            ])
+                            ->columns(2),
+                    ]),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -157,6 +215,7 @@ class CourseResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -172,7 +231,8 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SectionsRelationManager::class,
+            LecturesRelationManager::class,
         ];
     }
 
@@ -181,6 +241,7 @@ class CourseResource extends Resource
         return [
             'index' => Pages\ListCourses::route('/'),
             'create' => Pages\CreateCourse::route('/create'),
+            'view' => Pages\ViewCourse::route('/{record}'),
             'edit' => Pages\EditCourse::route('/{record}/edit'),
         ];
     }

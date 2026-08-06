@@ -7,6 +7,10 @@ use App\Models\Lecture;
 use App\Filament\Traits\HasPermissionBasedAccess;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,9 +33,24 @@ class LectureResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Lecture Details')
                     ->schema([
+                        Forms\Components\Select::make('course_id')
+                            ->label('Course')
+                            ->options(fn (): array => \App\Models\Course::orderBy('title')
+                                ->pluck('title', 'id')
+                                ->all())
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(fn (Forms\Set $set) => $set('section_id', null))
+                            ->dehydrated(false),
                         Forms\Components\Select::make('section_id')
-                            ->relationship('section', 'title', fn (Builder $query) => $query->with('course'))
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "[{$record->course->title}] {$record->title}")
+                            ->label('Section')
+                            ->relationship('section', 'title', fn (Builder $query, Forms\Get $get) => $query
+                                ->when(
+                                    filled($get('course_id')),
+                                    fn (Builder $q) => $q->where('course_id', $get('course_id'))
+                                ))
                             ->searchable()
                             ->preload()
                             ->required(),
@@ -87,6 +106,42 @@ class LectureResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Lecture Details')
+                    ->schema([
+                        TextEntry::make('section.course.title')->label('Course'),
+                        TextEntry::make('section.title')->label('Section'),
+                        TextEntry::make('title'),
+                        TextEntry::make('duration')
+                            ->formatStateUsing(fn ($state) => gmdate('i:s', $state))
+                            ->label('Duration'),
+                        IconEntry::make('is_free')->boolean()->label('Free Preview'),
+                        TextEntry::make('sort_order')->label('Sort Order'),
+                    ])->columns(3),
+                Section::make('Video')
+                    ->schema([
+                        TextEntry::make('video_url')
+                            ->url(fn (?string $state) => $state)
+                            ->columnSpanFull(),
+                    ]),
+                Section::make('Content')
+                    ->schema([
+                        TextEntry::make('content')
+                            ->html()
+                            ->columnSpanFull(),
+                    ]),
+                Section::make('Attachments')
+                    ->schema([
+                        TextEntry::make('attachments')
+                            ->listWithLineBreaks()
+                            ->columnSpanFull(),
+                    ]),
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -123,15 +178,27 @@ class LectureResource extends Resource
             ])
             ->defaultSort('section_id', 'asc')
             ->filters([
+                Tables\Filters\SelectFilter::make('course_id')
+                    ->label('Course')
+                    ->relationship('section.course', 'title')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\SelectFilter::make('section_id')
                     ->label('Section')
-                    ->relationship('section', 'title')
+                    ->relationship('section', 'title', function (Builder $query, $livewire) {
+                        $courseId = data_get($livewire?->getTableFilterState('course_id'), 'value');
+                        return $query->when(
+                            filled($courseId),
+                            fn (Builder $q) => $q->where('course_id', $courseId),
+                        );
+                    })
                     ->searchable()
                     ->preload(),
                 Tables\Filters\TernaryFilter::make('is_free')
                     ->label('Free Preview'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -154,6 +221,7 @@ class LectureResource extends Resource
         return [
             'index' => Pages\ListLectures::route('/'),
             'create' => Pages\CreateLecture::route('/create'),
+            'view' => Pages\ViewLecture::route('/{record}'),
             'edit' => Pages\EditLecture::route('/{record}/edit'),
         ];
     }

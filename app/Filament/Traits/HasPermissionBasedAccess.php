@@ -38,6 +38,14 @@ trait HasPermissionBasedAccess
         return $user->can(static::getPermissionBase() . '.edit');
     }
 
+    public static function canView(Model $record): bool
+    {
+        $user = auth()->user();
+        if (! $user) return false;
+        if ($user->hasRole('Super Admin')) return true;
+        return static::canEdit($record);
+    }
+
     public static function canDelete(Model $record): bool
     {
         $user = auth()->user();

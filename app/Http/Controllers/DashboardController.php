@@ -26,7 +26,7 @@ class DashboardController extends Controller
             'purchased_services' => ServicePurchase::where('user_id', $user->id)->count(),
         ];
 
-        $recentEnrollments = Enrollment::with('course')
+        $recentEnrollments = Enrollment::with('course.sections.lectures')
             ->where('user_id', $user->id)
             ->latest()
             ->take(5)
