@@ -60,6 +60,40 @@
                 class="hidden md:inline-flex font-label-sm text-label-sm uppercase tracking-wider text-on-primary bg-primary px-6 py-2 hover:opacity-90 transition active:scale-95">
                 Dashboard
             </a>
+
+            <div x-data="{ userMenuOpen: false }" @click.away="userMenuOpen = false"
+                class="relative hidden md:block">
+                <button type="button" @click="userMenuOpen = !userMenuOpen"
+                    class="flex items-center gap-2 p-1 rounded-full hover:opacity-80 transition" title="Account">
+                    <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}"
+                        class="w-9 h-9 rounded-full object-cover">
+                    <span class="material-symbols-outlined text-[20px] text-secondary"
+                        :class="{ 'rotate-180': userMenuOpen }">expand_more</span>
+                </button>
+                <div x-show="userMenuOpen" x-transition
+                    class="absolute right-0 mt-2 w-52 bg-surface border border-surface-container shadow-lg rounded-card overflow-hidden z-50">
+                    <div class="px-4 py-3 border-b border-surface-container">
+                        <p class="text-sm font-semibold truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-secondary truncate">{{ auth()->user()->email }}</p>
+                    </div>
+                    <div class="py-1">
+                        <a href="{{ route('dashboard') }}"
+                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:bg-surface-container transition">
+                            <span class="material-symbols-outlined text-[20px]">dashboard</span>Dashboard</a>
+                        <a href="{{ route('profile.edit') }}"
+                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:bg-surface-container transition">
+                            <span class="material-symbols-outlined text-[20px]">settings</span>Settings</a>
+                    </div>
+                    <div class="py-1 border-t border-surface-container">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm text-danger w-full hover:bg-danger/10 transition">
+                                <span class="material-symbols-outlined text-[20px]">logout</span>Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         @else
             <a href="{{ url('/contact') }}"
                 class="bg-primary text-on-primary px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-all active:scale-95">
