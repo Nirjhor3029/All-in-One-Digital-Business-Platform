@@ -89,10 +89,10 @@ class SettingsSeeder extends Seeder
 
             // Choose Your Journey Bento Cards (4 cards)
             ['key' => 'journey_cards', 'value' => json_encode([
-                ['image' => 'settings/icon-idea.png', 'title' => 'I have an idea', 'description' => 'I want to start a new business and need guidance from idea to launch.', 'cta_text' => 'Get Started', 'cta_url' => '/register'],
-                ['image' => 'settings/icon-business.png', 'title' => 'I already have a business', 'description' => 'I want to improve, digitize, or streamline my existing business.', 'cta_text' => 'Modernize', 'cta_url' => '/services'],
-                ['image' => 'settings/icon-software.png', 'title' => 'I need software', 'description' => 'I need a website, mobile app, custom software, or SaaS solution.', 'cta_text' => 'Build Now', 'cta_url' => '/contact'],
-                ['image' => 'settings/icon-growth.png', 'title' => 'I want to grow', 'description' => 'I want to automate operations, increase sales, and scale my business.', 'cta_text' => 'Scale Up', 'cta_url' => '/courses'],
+                ['image' => 'journey/icon-idea.png', 'title' => 'I have an idea', 'description' => 'I want to start a new business and need guidance from idea to launch.', 'cta_text' => 'Get Started', 'cta_url' => '/register'],
+                ['image' => 'journey/icon-business.png', 'title' => 'I already have a business', 'description' => 'I want to improve, digitize, or streamline my existing business.', 'cta_text' => 'Modernize', 'cta_url' => '/services'],
+                ['image' => 'journey/icon-software.png', 'title' => 'I need software', 'description' => 'I need a website, mobile app, custom software, or SaaS solution.', 'cta_text' => 'Build Now', 'cta_url' => '/contact'],
+                ['image' => 'journey/icon-growth.png', 'title' => 'I want to grow', 'description' => 'I want to automate operations, increase sales, and scale my business.', 'cta_text' => 'Scale Up', 'cta_url' => '/courses'],
             ], JSON_UNESCAPED_UNICODE), 'group' => 'journey_cards'],
 
             // Consultation CTA

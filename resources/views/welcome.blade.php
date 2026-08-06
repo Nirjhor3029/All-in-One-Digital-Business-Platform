@@ -137,7 +137,7 @@
                         class="aspect-[4/3] bg-surface-container mb-6 overflow-hidden block">
                         @if($course['image'] ?? false)
                             <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                src="{{ asset('storage/courses/' . $course['image']) }}" alt="{{ $course['title'] }}">
+                                src="{{ asset('storage/' . $course['image']) }}" alt="{{ $course['title'] }}">
                         @else
                             <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                 src="{{ asset('img/' . $course['image']) }}" alt="{{ $course['title'] }}">
@@ -286,7 +286,7 @@
                             class="mb-10 w-24 h-24 flex items-center justify-center border border-surface-container rounded-full group-hover:border-primary transition-colors overflow-hidden">
                             @if($card['image'] ?? false)
                                 <img class="w-16 h-16 object-contain grayscale"
-                                    src="{{ asset('storage/journey/' . $card['image']) }}" alt="{{ $card['title'] }}">
+                                    src="{{ asset('storage/' . $card['image']) }}" alt="{{ $card['title'] }}">
                             @else
                                 <img class="w-16 h-16 object-contain grayscale"
                                     src="{{ asset('img/' . $card['image']) }}" alt="{{ $card['title'] }}">
