@@ -12,7 +12,7 @@ class EnsureHasRole
     {
         $user = $request->user();
 
-        if (! $user || (! $user->roles()->exists() && $user->role !== 'admin')) {
+        if (! $user || (! $user->hasRole('Super Admin') && $user->role !== 'admin')) {
             abort(403);
         }
 

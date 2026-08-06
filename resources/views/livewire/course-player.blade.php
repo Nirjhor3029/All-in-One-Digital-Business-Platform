@@ -4,7 +4,7 @@
         <div class="bg-black aspect-video flex items-center justify-center">
             @if($currentLecture->video_url && (str_contains($currentLecture->video_url, 'youtube') || str_contains($currentLecture->video_url, 'youtu.be')))
                 @php
-                    preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $currentLecture->video_url, $matches);
+                    preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{6,})/', $currentLecture->video_url, $matches);
                     $youtubeId = $matches[1] ?? null;
                 @endphp
                 @if($youtubeId)
@@ -15,7 +15,7 @@
                 @endif
             @elseif($currentLecture->video_url && str_contains($currentLecture->video_url, 'vimeo'))
                 @php
-                    preg_match('/(?:vimeo\.com\/)(\d+)/', $currentLecture->video_url, $matches);
+                    preg_match('/(?:vimeo\.com\/(?:video\/)?)(\d+)/', $currentLecture->video_url, $matches);
                     $vimeoId = $matches[1] ?? null;
                 @endphp
                 @if($vimeoId)
