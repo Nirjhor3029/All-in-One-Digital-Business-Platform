@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\Post;
+use App\Models\Project;
+use App\Models\Service;
 use App\Models\Setting;
+use App\Models\Testimonial;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -91,5 +97,41 @@ class HomeController extends Controller
         ];
 
         return view('welcome', $data);
+    }
+
+    public function demo(): View
+    {
+        $services = Service::published()->with('plans')->latest()->take(6)->get();
+        $courses = Course::published()->latest()->take(6)->get();
+        $posts = Post::published()->with('category')->latest('published_at')->take(3)->get();
+        $projects = Project::active()->ordered()->get();
+        $testimonials = Testimonial::active()->ordered()->get();
+
+        $stats = [
+            'courses' => Course::published()->count(),
+            'services' => Service::published()->count(),
+            'posts' => Post::published()->count(),
+            'enrollments' => Enrollment::count(),
+        ];
+
+        $activities = Enrollment::with('course')
+            ->latest()
+            ->take(6)
+            ->get()
+            ->filter(fn ($e) => $e->course)
+            ->map(fn ($e) => [
+                'text' => "New enrollment in {$e->course->title}",
+                'time' => $e->created_at->diffForHumans(),
+            ])
+            ->values();
+
+        $settings = Setting::getAll();
+        $chatConfig = [
+            'enabled' => filter_var($settings['chat_auto_reply_enabled'] ?? '1', FILTER_VALIDATE_BOOLEAN),
+            'delay' => (int) ($settings['chat_auto_reply_delay'] ?? 2),
+            'message' => $settings['chat_auto_reply_message'] ?? "Got it! Typically replies within a few hours ⏱",
+        ];
+
+        return view('home2', compact('services', 'courses', 'posts', 'projects', 'testimonials', 'stats', 'chatConfig', 'activities'));
     }
 }

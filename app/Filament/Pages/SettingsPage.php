@@ -9,11 +9,13 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Cache;
 
 class SettingsPage extends Page implements HasForms
 {
@@ -202,6 +204,11 @@ class SettingsPage extends Page implements HasForms
 
             // Stats
             'stats' => $stats,
+
+            // Chat Widget
+            'chat_auto_reply_enabled' => filter_var($settings['chat_auto_reply_enabled'] ?? '1', FILTER_VALIDATE_BOOLEAN),
+            'chat_auto_reply_delay' => $settings['chat_auto_reply_delay'] ?? 2,
+            'chat_auto_reply_message' => $settings['chat_auto_reply_message'] ?? "Got it! Typically replies within a few hours ⏱",
 
             // Social Links
             'social_facebook' => $settings['social_facebook'] ?? null,
@@ -581,6 +588,25 @@ class SettingsPage extends Page implements HasForms
                             ->reorderableWithButtons(),
                     ]),
 
+                Section::make('Chat Widget ("Talk to us" popup)')
+                    ->description('Controls the simulated agent reply shown after a visitor sends a message in the /home2 chat widget.')
+                    ->schema([
+                        Toggle::make('chat_auto_reply_enabled')
+                            ->label('Show an automatic agent reply after sending')
+                            ->default(true)
+                            ->columnSpanFull(),
+                        TextInput::make('chat_auto_reply_delay')
+                            ->label('Reply delay (seconds)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->maxValue(10)
+                            ->default(2),
+                        TextInput::make('chat_auto_reply_message')
+                            ->label('Agent reply message')
+                            ->required()
+                            ->maxLength(150),
+                    ])->columns(2),
+
                 Section::make('Social Links')
                     ->description('Social media links displayed in the footer.')
                     ->schema([
@@ -622,6 +648,8 @@ class SettingsPage extends Page implements HasForms
                 'journey_cards',
             ])) {
                 $value = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : '[]';
+            } elseif (is_bool($value)) {
+                $value = $value ? '1' : '0';
             } elseif (is_null($value)) {
                 $value = '';
             }
@@ -631,6 +659,8 @@ class SettingsPage extends Page implements HasForms
                 ['value' => $value, 'group' => $this->getGroupForKey($key)]
             );
         }
+
+        Cache::forget('site_settings');
 
         Notification::make()
             ->title('Settings saved successfully!')
@@ -642,6 +672,7 @@ class SettingsPage extends Page implements HasForms
     {
         if (str_starts_with($key, 'hero_')) return 'hero';
         if (str_starts_with($key, 'social_')) return 'social';
+        if (str_starts_with($key, 'chat_')) return 'chat';
         if (in_array($key, ['stats', 'journey_steps', 'core_services', 'saas_products', 'business_courses', 'why_points', 'success_stories', 'roadmap_stages', 'journey_cards', 'consultation_headline', 'consultation_description', 'consultation_cta_text', 'consultation_cta_url'])) {
             if (str_starts_with($key, 'consultation_')) return 'cta';
             return 'homepage';

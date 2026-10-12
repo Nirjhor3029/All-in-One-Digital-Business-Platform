@@ -12,11 +12,12 @@
             ['label' => 'Services', 'href' => route('services.index'), 'active' => request()->routeIs('services*')],
             ['label' => 'Products', 'href' => url('/#products'), 'active' => false],
             ['label' => 'Courses', 'href' => route('courses.index'), 'active' => request()->routeIs('courses*')],
+            ['label' => 'Portfolio', 'href' => route('portfolio.index'), 'active' => request()->routeIs('portfolio*')],
             ['label' => 'Success Stories', 'href' => url('/#stories'), 'active' => false],
             ['label' => 'About', 'href' => url('/about'), 'active' => request()->is('about')],
         ];
     @endphp
-    <div class="hidden lg:flex items-center gap-8">
+    <div class="hidden lg:flex items-center gap-5 xl:gap-7">
         @foreach ($navLinks as $link)
             <a href="{{ $link['href'] }}"
                 class="font-body-md text-body-md transition-colors {{ $link['active'] ? 'text-primary font-semibold border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">

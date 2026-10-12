@@ -17,6 +17,10 @@ Route::get('/proofcam/privacy-policy', [StaticController::class, 'proofcamPrivac
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home2', [HomeController::class, 'demo'])->name('home.demo');
+Route::post('/contact-messages', [App\Http\Controllers\ContactMessageController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact-messages.store');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
@@ -39,6 +43,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services.index');
 Route::get('/services/{service:slug}', [App\Http\Controllers\ServiceController::class, 'show'])->name('services.show');
+
+Route::get('/portfolio', [App\Http\Controllers\ProjectController::class, 'index'])->name('portfolio.index');
 
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/category/{category:slug}', [App\Http\Controllers\BlogController::class, 'category'])->name('blog.category');

@@ -32,6 +32,8 @@
                     <span class="label-sm text-primary font-bold">Company</span>
                     <a href="{{ url('/about') }}"
                         class="font-label-sm text-secondary hover:text-primary hover:underline transition">About</a>
+                    <a href="{{ route('portfolio.index') }}"
+                        class="font-label-sm text-secondary hover:text-primary hover:underline transition">Portfolio</a>
                     <a href="{{ url('/#stories') }}"
                         class="font-label-sm text-secondary hover:text-primary hover:underline transition">Success Stories</a>
                     <a href="{{ url('/contact') }}"
