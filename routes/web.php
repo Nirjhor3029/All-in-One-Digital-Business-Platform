@@ -18,6 +18,8 @@ Route::get('/proofcam/privacy-policy', [StaticController::class, 'proofcamPrivac
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home2', [HomeController::class, 'demo'])->name('home.demo');
+Route::get('/home3', [HomeController::class, 'demo3'])->name('home.demo3');
+Route::get('/home4', [HomeController::class, 'legacyIndex'])->name('home.legacy');
 Route::post('/contact-messages', [App\Http\Controllers\ContactMessageController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact-messages.store');

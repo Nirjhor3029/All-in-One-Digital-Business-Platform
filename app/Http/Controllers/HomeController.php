@@ -15,6 +15,11 @@ class HomeController extends Controller
 {
     public function index(): View
     {
+        return view('home3');
+    }
+
+    public function legacyIndex(): View
+    {
         $settings = Setting::getAll();
 
         $parseJson = function (string $key, array $default = []) use ($settings): array {
@@ -133,5 +138,10 @@ class HomeController extends Controller
         ];
 
         return view('home2', compact('services', 'courses', 'posts', 'projects', 'testimonials', 'stats', 'chatConfig', 'activities'));
+    }
+
+    public function demo3(): View
+    {
+        return view('home3');
     }
 }
